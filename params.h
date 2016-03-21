@@ -53,23 +53,23 @@ void PrintHelp() {
             << "Display program name and exit" << std::endl;
     std::cout << "\t" << program_name << " --path\t\t"
             << "Display program path and exit" << std::endl;
-    std::cout << "\t" << program_name << " --example  filename\t"
+    std::cout << "\t" << program_name << " --example\t\t"
             << "Generate example of configuration file and exit" << std::endl;
-    std::cout << "\t" << program_name << " --output   filename.out\t"
+    std::cout << "\t" << program_name << " --output filename\t"
             << "Print half-life in output file and exit" << std::endl;
-    std::cout << "\t" << program_name << " --squareNx-Ny-Nz   filename.fsf\t"
+    std::cout << "\t" << program_name << " --squareNx-Ny-Nz filename\t"
             << "Print surface square in output file and exit" << std::endl;
     std::cout << std::endl;
-    std::cout << "\t" << program_name << " [filename]\t"
+    std::cout << "\t" << program_name << " [filename]\t\t"
             << "Use filename configuration file" << std::endl;
     std::cout << std::endl;
-    std::cout << "\t" << program_name << " [] -extra\t"
+    std::cout << "\t" << program_name << " [] -extra\t\t"
             << "Use express database out" << std::endl;
     std::cout << "\t" << program_name << " [] -retention\t"
             << "Use retention out" << std::endl;
-    std::cout << "\t" << program_name << " [] -print\t"
+    std::cout << "\t" << program_name << " [] -print\t\t"
             << "Print field parameters" << std::endl;
-    std::cout << "\t" << program_name << " -testrun\t"
+    std::cout << "\t" << program_name << " -testrun\t\t"
             << "Run test calculation" << std::endl;
 }
 
