@@ -50,6 +50,14 @@ void CellularAutomata::ReSize(cuint& sizeX, cuint& sizeY, cuint sizeZ) {
     }
 }
 
+Cell CellularAutomata::GetCell(uint x, uint y, uint z) const {
+    return cells[x][y][z];
+}
+
+void CellularAutomata::SetCell(const Cell& cell, uint x, uint y, uint z) {
+    cells[x][y][z] = cell;
+}
+
 void CellularAutomata::ClearAllBorders() {
     ClearUpX();
     ClearUpY();
@@ -369,6 +377,10 @@ void CellularAutomata::AddSub(const SUBTYPE type, const string& name,
     AddSub(sub);
 }
 
+pSub CellularAutomata::GetSub(cuint& i) const {
+    return subs[i];
+}
+
 pSub CellularAutomata::GetSub(const string& name) {
     for (pSub & sub : subs) {
         if (sub->GetName() == name) {
@@ -387,124 +399,24 @@ int CellularAutomata::GetSubI(const string& name) {
     return -1;
 }
 
-void CellularAutomata::SaveToImage(cchar* path, uchar* imageData) {
-        //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
-    FILE *f = fopen(path, "wb"); //f = fopen(pathImg.c_str(),"wb");
-    if (!f) {
-        printf("Can't open ScreenShot File! %s", path);
-        return;
-    }
-    uint width  = size.x;
-    uint height = size.y;
-    uint filesize = 54 + 3 * width * height;
-    uchar bmpfileheader[14] = {'B', 'M', 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 0};
-    uchar bmpinfoheader[40] = {40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 24, 0};
-    bmpfileheader[ 2] = (uchar)(filesize);
-    bmpfileheader[ 3] = (uchar)(filesize >> 8);
-    bmpfileheader[ 4] = (uchar)(filesize >> 16);
-    bmpfileheader[ 5] = (uchar)(filesize >> 24);
-    bmpinfoheader[ 4] = (uchar)(width);
-    bmpinfoheader[ 5] = (uchar)(width >> 8);
-    bmpinfoheader[ 6] = (uchar)(width >> 16);
-    bmpinfoheader[ 7] = (uchar)(width >> 24);
-    bmpinfoheader[ 8] = (uchar)(height);
-    bmpinfoheader[ 9] = (uchar)(height >> 8);
-    bmpinfoheader[10] = (uchar)(height >> 16);
-    bmpinfoheader[11] = (uchar)(height >> 24);
-    //unsigned char tempColors = 0;
-    fwrite(bmpfileheader, 1, 14, f);
-    fwrite(bmpinfoheader, 1, 40, f);
-    //for (int i = 0; i < wigth * heigth * 3; i += 3) {
-     //   tempColors = imageData[i];
-     //   imageData[i] = imageData[i + 2];
-     //   imageData[i + 2] = tempColors;
-    //}
-    fwrite(imageData, 1, width * height * 3, f);
-    fclose(f);
+vector<pSub> CellularAutomata::GetSubs() const {
+    return subs;
 }
 
-void CellularAutomata::SaveToImagePNG(cchar* path, uchar* imageData) {
-        //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
-    FILE *f = fopen(path, "wb");
-    if (!f) {
-        printf("Can't open ScreenShot File! %s", path);
-        return;
-    }
-    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-    if (!png_ptr) {
-        fclose(f);
-        return;
-        //goto close_file;
-    }
-    png_infop png_info;
-    if (!(png_info = png_create_info_struct(png_ptr))) {
-        png_destroy_write_struct(&png_ptr, nullptr);
-        fclose(f);
-        return;
-        //goto destroy_write;
-    }
-    if (setjmp(png_jmpbuf(png_ptr))) {
-        png_destroy_write_struct(&png_ptr, nullptr);
-        fclose(f);
-        return;
-        //goto destroy_write;
-    }
-    png_init_io(png_ptr, f);
-    uint width  = size.x;
-    uint height = size.y;
-    png_set_IHDR(png_ptr, png_info, width, height, 8, PNG_COLOR_TYPE_RGB,
-        PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
-        PNG_FILTER_TYPE_DEFAULT);
-
-    uchar data[width * height * 3];
-    uchar *rows[height];
-
-    //uchar tempColors = 0;
-    //for (uint i = 0; i < width * height * 4; i += 4) {
-    //    tempColors = imageData[i + 1];
-    //    imageData[i + 1] = imageData[i + 3];
-    //    imageData[i + 3] = tempColors;
-    //}
-    for (uint i = 0; i < height; ++i) {
-        rows[height - i - 1] = data + (i * width * 3);
-        for (uint j = 0; j < width; ++j) {
-            int i1 = (i * width + j) * 3;
-            int i2 = (i * width + j) * 4;
-            data[i1++] = imageData[i2++];
-            data[i1++] = imageData[i2++];
-            data[i1++] = imageData[i2++];
-        }
-    }
-
-    png_set_rows(png_ptr, png_info, rows);
-    png_write_png(png_ptr, png_info, PNG_TRANSFORM_IDENTITY, nullptr);
-    png_write_end(png_ptr, png_info);
-
-//destroy_write:
-    png_destroy_write_struct(&png_ptr, nullptr);
-//close_file:
-    fclose(f);
+void CellularAutomata::ClearSubs() {
+    subs.clear();
 }
 
-void CellularAutomata::SaveFieldText(cchar* path) {
-    ofstream out;
-    out.open(path, ios_base::trunc);
-    out << "iteration: " << iteration << "\n";
-    out << "subcount: " << subs.size() << "\n";
-    for (pSub & sub : subs) {
-        out << sub->GetType() << " " << sub->GetName() << " " << sub->GetColor().r
-                << " " << sub->GetColor().g  << " " << sub->GetColor().b << "\n";
-    }
-    for (uint ix = 0; ix < size.x; ++ix) {
-        for (uint iy = 0; iy < size.y; ++iy) {
-            for (uint iz = 0; iz < size.z; ++iz) {
-                for (pSub & sub : cells[ix][iy][iz].GetSubs()) {
-                    out << ix << "\t" << iy << "\t" << iz << "\t" << sub->GetName() << "\n";
-                }
-            }
-        }	
-    }
-    out.close();
+void CellularAutomata::LoadFieldBin(cchar* path){
+    //ofstream file; file.open(path, ios::binary); int text; while ((text = file..get()) != EOF){
+    //    cout << static_cast<char>(text); }
+    ifstream in(path, ios::binary | ios::in); //Открыли для только для чтения в бинарном режиме
+    in.read((char*)&iteration, sizeof(iteration));
+    in.read((char*)&subs, sizeof(subs));
+    in.read((char*)&cells, sizeof(cells)); //Считали информацию в объект О
+    in.close(); //Закрыли открытый файл 
+//char text[1000]; while(!file.eof()) { file<<text; cout<<text<<endl; }
+    std::cout << "Loading field " << path << " Done!\n";
 }
 
 void CellularAutomata::LoadFieldText(cchar* path) {
@@ -759,24 +671,133 @@ void CellularAutomata::LoadFieldTextXYZR(cchar* path, string name) {
     std::cout << "Loading field " << path << " Done!\n";
 }
 
-void CellularAutomata::LoadFieldBin(cchar* path){
-    //ofstream file; file.open(path, ios::binary); int text; while ((text = file..get()) != EOF){
-    //    cout << static_cast<char>(text); }
-    ifstream in(path, ios::binary | ios::in); //Открыли для только для чтения в бинарном режиме
-    in.read((char*)&iteration, sizeof(iteration));
-    in.read((char*)&subs, sizeof(subs));
-    in.read((char*)&cells, sizeof(cells)); //Считали информацию в объект О
-    in.close(); //Закрыли открытый файл 
-//char text[1000]; while(!file.eof()) { file<<text; cout<<text<<endl; }
-    std::cout << "Loading field " << path << " Done!\n";
-}
-
 void CellularAutomata::SaveFieldBin(cchar* path){
     ofstream out(path, ios::binary | ios::out); //Открыли для записи в бинарном режиме
     out.write((char*)&iteration, sizeof(iteration));
     out.write((char*)&subs, sizeof(subs));
     out.write((char*)&cells, sizeof(cells)); //Записали объект А в открытый файл
     out.close(); //Закрыли открытый файл
+}
+
+
+void CellularAutomata::SaveFieldText(cchar* path) {
+    ofstream out;
+    out.open(path, ios_base::trunc);
+    out << "iteration: " << iteration << "\n";
+    out << "subcount: " << subs.size() << "\n";
+    for (pSub & sub : subs) {
+        out << sub->GetType() << " " << sub->GetName() << " " << sub->GetColor().r
+                << " " << sub->GetColor().g  << " " << sub->GetColor().b << "\n";
+    }
+    for (uint ix = 0; ix < size.x; ++ix) {
+        for (uint iy = 0; iy < size.y; ++iy) {
+            for (uint iz = 0; iz < size.z; ++iz) {
+                for (pSub & sub : cells[ix][iy][iz].GetSubs()) {
+                    out << ix << "\t" << iy << "\t" << iz << "\t" << sub->GetName() << "\n";
+                }
+            }
+        }	
+    }
+    out.close();
+}
+
+void CellularAutomata::SaveToImage(cchar* path, uchar* imageData) {
+        //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
+    FILE *f = fopen(path, "wb"); //f = fopen(pathImg.c_str(),"wb");
+    if (!f) {
+        printf("Can't open ScreenShot File! %s", path);
+        return;
+    }
+    uint width  = size.x;
+    uint height = size.y;
+    uint filesize = 54 + 3 * width * height;
+    uchar bmpfileheader[14] = {'B', 'M', 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 0};
+    uchar bmpinfoheader[40] = {40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 24, 0};
+    bmpfileheader[ 2] = (uchar)(filesize);
+    bmpfileheader[ 3] = (uchar)(filesize >> 8);
+    bmpfileheader[ 4] = (uchar)(filesize >> 16);
+    bmpfileheader[ 5] = (uchar)(filesize >> 24);
+    bmpinfoheader[ 4] = (uchar)(width);
+    bmpinfoheader[ 5] = (uchar)(width >> 8);
+    bmpinfoheader[ 6] = (uchar)(width >> 16);
+    bmpinfoheader[ 7] = (uchar)(width >> 24);
+    bmpinfoheader[ 8] = (uchar)(height);
+    bmpinfoheader[ 9] = (uchar)(height >> 8);
+    bmpinfoheader[10] = (uchar)(height >> 16);
+    bmpinfoheader[11] = (uchar)(height >> 24);
+    //unsigned char tempColors = 0;
+    fwrite(bmpfileheader, 1, 14, f);
+    fwrite(bmpinfoheader, 1, 40, f);
+    //for (int i = 0; i < wigth * heigth * 3; i += 3) {
+     //   tempColors = imageData[i];
+     //   imageData[i] = imageData[i + 2];
+     //   imageData[i + 2] = tempColors;
+    //}
+    fwrite(imageData, 1, width * height * 3, f);
+    fclose(f);
+}
+
+void CellularAutomata::SaveToImagePNG(cchar* path, uchar* imageData) {
+        //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
+    FILE *f = fopen(path, "wb");
+    if (!f) {
+        printf("Can't open ScreenShot File! %s", path);
+        return;
+    }
+    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+    if (!png_ptr) {
+        fclose(f);
+        return;
+        //goto close_file;
+    }
+    png_infop png_info;
+    if (!(png_info = png_create_info_struct(png_ptr))) {
+        png_destroy_write_struct(&png_ptr, nullptr);
+        fclose(f);
+        return;
+        //goto destroy_write;
+    }
+    if (setjmp(png_jmpbuf(png_ptr))) {
+        png_destroy_write_struct(&png_ptr, nullptr);
+        fclose(f);
+        return;
+        //goto destroy_write;
+    }
+    png_init_io(png_ptr, f);
+    uint width  = size.x;
+    uint height = size.y;
+    png_set_IHDR(png_ptr, png_info, width, height, 8, PNG_COLOR_TYPE_RGB,
+        PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
+        PNG_FILTER_TYPE_DEFAULT);
+
+    uchar data[width * height * 3];
+    uchar *rows[height];
+
+    //uchar tempColors = 0;
+    //for (uint i = 0; i < width * height * 4; i += 4) {
+    //    tempColors = imageData[i + 1];
+    //    imageData[i + 1] = imageData[i + 3];
+    //    imageData[i + 3] = tempColors;
+    //}
+    for (uint i = 0; i < height; ++i) {
+        rows[height - i - 1] = data + (i * width * 3);
+        for (uint j = 0; j < width; ++j) {
+            int i1 = (i * width + j) * 3;
+            int i2 = (i * width + j) * 4;
+            data[i1++] = imageData[i2++];
+            data[i1++] = imageData[i2++];
+            data[i1++] = imageData[i2++];
+        }
+    }
+
+    png_set_rows(png_ptr, png_info, rows);
+    png_write_png(png_ptr, png_info, PNG_TRANSFORM_IDENTITY, nullptr);
+    png_write_end(png_ptr, png_info);
+
+//destroy_write:
+    png_destroy_write_struct(&png_ptr, nullptr);
+//close_file:
+    fclose(f);
 }
 
 uint CellularAutomata::Layer() {

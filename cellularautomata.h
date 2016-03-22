@@ -25,9 +25,9 @@ public:
     inline uint GetSizeY() const { return size.y; }
     inline uint GetSizeZ() const { return size.z; }
     inline uint GetVolume() const { return size.x * size.y * size.z; }
-    Cell GetCell(uint x, uint y, uint z = 0) const { return cells[x][y][z]; }
-    void SetCell(const Cell& cell, uint x, uint y, uint z = 0) 
-        { cells[x][y][z] = cell; }
+    
+    Cell GetCell(uint x, uint y, uint z = 0) const;
+    void SetCell(const Cell& cell, uint x, uint y, uint z = 0);
         
     void ClearAllBorders();
     void ClearUpX();
@@ -37,25 +37,25 @@ public:
     void ClearDownY();
     void ClearDownZ();
     void SetEmptyField();
+    
     uint SolidCount();
     uint Count(SUBTYPE type);
     uint Count(const string& name);
     uint SidesCount();
     uint SidesCount(SUBTYPE type);
     uint SidesCount(const string& name);
-    vector<pSub> GetSubs() const { return subs; }
-    pSub GetSub(cuint& i) const { return subs[i]; }
-    pSub GetSub(const string& name);
-    int GetSubI(const string& name);
-    void ClearSubs() { subs.clear(); }
+    
     bool AddToCell(pSub sub, int x, int y, int z = 0);
     void AddSub(pSub newSub);
     void AddSub(const SUBTYPE type, const string& name, const XColor color = XColor(),
         const vector<locate>& locations = vector<locate>());
-    
+    pSub GetSub(cuint& i) const;
+    pSub GetSub(const string& name);
+    int GetSubI(const string& name);
+    vector<pSub> GetSubs() const;
     inline uint GetSubCount() const { return subs.size(); }
-    void SaveFieldBin(cchar* path);
-    void SaveFieldText(cchar* path);
+    void ClearSubs();
+    
     void LoadFieldBin(cchar* path);
     void LoadFieldText(cchar* path);
     void LoadFieldTextOld(cchar* path);
@@ -65,8 +65,12 @@ public:
     void LoadFieldTextXYZX(cchar* path);
     void LoadFieldTextXYZ(cchar* path, string name);
     void LoadFieldTextXYZR(cchar* path, string name);
+    void SaveFieldBin(cchar* path);
+    void SaveFieldText(cchar* path);
+    
     void SaveToImage(cchar* path, uchar* imageData);
     void SaveToImagePNG(cchar* path, uchar* imageData);
+    
     uint Layer();
     uint Adsorbed() const;
     void ImportSubs(CellularAutomata * CA);

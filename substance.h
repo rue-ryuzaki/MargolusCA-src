@@ -74,7 +74,7 @@ protected:
 typedef Substance* pSub;
 
 class Active : public Substance {
-public: 
+public:
     Active(const string& name = "acte", const XColor color = XColor(255),
             const vector<locate>& locations = vector<locate>()) :
             Substance(name, color, locations) { }
@@ -84,7 +84,7 @@ public:
 };
 
 class Modifier : public Substance {
-public: 
+public:
     Modifier(const string& name = "mode", const XColor color = XColor(0, 255),
             const vector<locate>& locations = vector<locate>()) :
             Substance(name, color, locations) { }
@@ -94,7 +94,7 @@ public:
 };
 
 class Solid : public Substance {
-public: 
+public:
     Solid(const string& name = "sole", const XColor color = XColor(0, 0, 255),
             const vector<locate>& locations = vector<locate>()) :
             Substance(name, color, locations) { }

@@ -1631,7 +1631,15 @@ public:
         bool filemode; // true - new, false - append
         try {
             x = stoi(vs[0]);
+            if (x < 1) {
+                cerr << "x < 1\n";
+                return;
+            }
             y = stoi(vs[1]);
+            if (y < 1) {
+                cerr << "y < 1\n";
+                return;
+            }
             iter = stoi(vs[2]);
             if (iter < 1) {
                 cerr << "Iteration count < 1\n";
@@ -1827,13 +1835,13 @@ public:
             delete CAM;
         }
         Save2dFldToFile(fld, x, y);
-        if (cnt == 0) {
-            return;
-        }
         for (int ix = 0; ix < x; ++ix) {
             delete [] fld[ix];
         }
         delete [] fld;
+        if (cnt == 0) {
+            return;
+        }
         cout << "xR = " << xr / cnt << endl;
         cout << "yR = " << yr / cnt << endl;
     }
