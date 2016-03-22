@@ -72,12 +72,11 @@ enum SQLStatus {
 
 class SQLResult {
 public:
-    SQLResult(SQLStatus status, string message, MySQLData data) : status(status),
-            message(message), data(data) { }
+    SQLResult(SQLStatus status, string message, MySQLData data);
     
-    MySQLData GetData() const { return data; }
-    SQLStatus GetStatus() const { return status; };
-    string GetMessage() const { return message; }
+    MySQLData GetData() const;
+    SQLStatus GetStatus() const;
+    string GetMessage() const;
     
 private:
     SQLStatus status;

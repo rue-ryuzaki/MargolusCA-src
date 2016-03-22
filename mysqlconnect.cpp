@@ -114,6 +114,21 @@ string MySQLData::GetHead(uint column) const {
     return head[column];
 }
 
+SQLResult::SQLResult(SQLStatus status, string message, MySQLData data)
+    : status(status), message(message), data(data) { }
+
+MySQLData SQLResult::GetData() const {
+    return data;
+}
+
+SQLStatus SQLResult::GetStatus() const {
+    return status;
+};
+
+string SQLResult::GetMessage() const {
+    return message;
+}
+
 MySQL::MySQL(connectDetails details) {
     mysqlD.server   = details.server;     // where the mysql database is
     mysqlD.user     = details.user;       // the root user of mysql
