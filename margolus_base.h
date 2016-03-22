@@ -68,22 +68,22 @@ public:
 
     void Calculation(cuint& dx, cuint& dy);
     void Calculation(cuint& dx, cuint& dy, cuint& dz);
-    void SetTempPtr(double* pointer) {
-        if (T == 0 || T == nullptr) {
-            T = pointer;
-        }
-        //return T;
-    }
-    void SetTemperature(double Temp) { *T = Temp; }
+    
+    void SetTempPtr(double* pointer);
+    void SetTemperature(double Temp);
     inline double GetTemperature() const { return *T; }
+    void SetSteamPtr(double* pointer);
+    void SetSteamEnergy(double steamEnergy);
+    inline double GetSteamEnergy() const { return *steamEnergy_; }
+    
     void SetEnergy(const string& name1, const string& name2, double* energyH,
         double* energyS);
     void AddEnergy(const string& name1, const string& name2, double* energyH,
         double* energyS);
-    void AddEnergy(Energy & en) { energy.push_back(en); }
+    void AddEnergy(Energy & en);
     
-    vector<Energy> GetEnergies() const { return energy; }
-    vector<Energy> GetEnergiesCell() const { return energyCell; }
+    vector<Energy> GetEnergies() const;
+    vector<Energy> GetEnergiesCell() const;
     double GetEnergy(const string& name1, const string& name2);
     double GetEnergyH(const string& name1, const string& name2); 
     double GetEnergyS(const string& name1, const string& name2);
@@ -92,22 +92,16 @@ public:
         double* energyS);
     void AddEnergyCell(const string& name1, const string& name2, double* energyH,
         double* energyS);
-    void AddEnergyCell(Energy & en) { energyCell.push_back(en); }
+    void AddEnergyCell(Energy & en);
     double GetEnergyCell(const string& name1, const string& name2);
     double GetEnergyHCell(const string& name1, const string& name2); 
     double GetEnergySCell(const string& name1, const string& name2);
-    void ClearEnergy() { energy.clear(); energyCell.clear(); }
-    void SetSteamPtr(double* pointer) {
-        if (steamEnergy_ == 0 || steamEnergy_ == nullptr) {
-            steamEnergy_ = pointer;
-        }
-        //return steamEnergy_;
-    }
-    void SetSteamEnergy(double steamEnergy) { *steamEnergy_ = steamEnergy; }
-    inline double GetSteamEnergy() const { return *steamEnergy_; }
-    void SetMoveModifier(bool value) { modifierMove = value; }
+    
+    void SetMoveModifier(bool value);
+    void ClearEnergy();
     void UpdateEnergies();
     void PrintParameters() const;
+    
     uint movement = 0;
     bool finished = false;
     //void PrintBlocks();
@@ -122,6 +116,10 @@ protected:
     bool CheckActive(cuint& ix, cuint& iy, cuint& iz) const;
     void PareEnergy(Cell& cellIn, Cell& cellOut, double& energy);
     void PareEnergyFull(Cell& cellIn, Cell& cellOut, double& energy);
+    
+    virtual double CalculationBlockEnergy(const Block& block, cuint& ix, cuint& iy);
+    virtual double CalculationBlockEnergy(const Block3D& block, cuint& ix, cuint& iy, cuint& iz);
+    
     void CreateRotateNotBlock(Block & block, cuint& ix, cuint& iy);
     void CreateRotateNotBlock3D(Block3D & block, cuint& ix, cuint& iy, cuint& iz);
     void CreateRotateBlock(Block & block, Rotate rotate, cuint& ix, cuint& iy,
@@ -135,8 +133,7 @@ protected:
     //void CreateBlock(list<Block>(& block), int& ix, int& iy);
     void ChangeBlock(const Block& block, cuint& ix, cuint& iy);
     void ChangeBlock(const Block3D& block, cuint& ix, cuint& iy, cuint& iz);
-    virtual double CalculationBlockEnergy(const Block& block, cuint& ix, cuint& iy);
-    virtual double CalculationBlockEnergy(const Block3D& block, cuint& ix, cuint& iy, cuint& iz);
+    
     int indexF[9][2] = {{0, 0}, {1, 0}, {1, 1}, {0, 1}, {0, 0}, {1, 0}, {1, 1},
         {0, 1}, {0, 0}};
     int indexB[9][2] = {{0, 0}, {0, 1}, {1, 1}, {1, 0}, {0, 0}, {0, 1}, {1, 1},

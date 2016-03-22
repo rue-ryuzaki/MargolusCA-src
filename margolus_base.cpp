@@ -214,27 +214,26 @@ void Margolus::Calculation(cuint& dx, cuint& dy) {
     }
 }
 
-void Margolus::PrintBlock(Block& block) const {
-    cout << "\n";
-    for(uint x = 0; x < 2; ++x) {
-        for (uint y = 0; y < 2; ++y) {
-            cout << " - ";
-            for (pSub sub : block.cells[x][y].GetSubs()) {
-                switch (sub->GetType()) {
-                    case SOLID:
-                        cout << "S";
-                        break;
-                    case ACTIVE:
-                        cout << "A";
-                        break;
-                    case MODIFIER:
-                        cout << "M";
-                }
-            }
-            cout << "\t";
-        }
-        cout << "\n";
+void Margolus::SetTempPtr(double* pointer) {
+    if (T == 0 || T == nullptr) {
+        T = pointer;
     }
+    //return T;
+}
+
+void Margolus::SetTemperature(double Temp) {
+    *T = Temp;
+}
+
+void Margolus::SetSteamPtr(double* pointer) {
+    if (steamEnergy_ == 0 || steamEnergy_ == nullptr) {
+        steamEnergy_ = pointer;
+    }
+    //return steamEnergy_;
+}
+
+void Margolus::SetSteamEnergy(double steamEnergy) {
+    *steamEnergy_ = steamEnergy;
 }
 
 void Margolus::SetEnergy(const string& name1, const string& name2,
@@ -260,6 +259,18 @@ void Margolus::AddEnergy(const string& name1, const string& name2,
     energy.push_back(en);
 }
 
+void Margolus::AddEnergy(Energy & en) {
+    energy.push_back(en);
+}
+
+vector<Energy> Margolus::GetEnergies() const {
+    return energy;
+}
+
+vector<Energy> Margolus::GetEnergiesCell() const {
+    return energyCell;
+}
+    
 double Margolus::GetEnergy(const string& name1, const string& name2) {
     for (Energy & en : energy) {
         if ((en.name1 == name1 && en.name2 == name2)
@@ -313,6 +324,10 @@ void Margolus::AddEnergyCell(const string& name1, const string& name2,
     energyCell.push_back(en);
 }
 
+void Margolus::AddEnergyCell(Energy & en) {
+    energyCell.push_back(en);
+}
+
 double Margolus::GetEnergyCell(const string& name1, const string& name2) {
     for (Energy & en : energyCell) {
         if ((en.name1 == name1 && en.name2 == name2)
@@ -341,6 +356,150 @@ double Margolus::GetEnergySCell(const string& name1, const string& name2) {
         }
     }
     return 0;
+}
+
+void Margolus::SetMoveModifier(bool value) {
+    modifierMove = value;
+}
+
+void Margolus::ClearEnergy() {
+    energy.clear();
+    energyCell.clear();
+}
+
+void Margolus::UpdateEnergies() {
+    for (Energy & en : energy) {
+        en.UpdateEnergy(*T);
+    }
+    for (Energy & en : energyCell) {
+        en.UpdateEnergy(*T);
+    }
+}
+
+void Margolus::PrintParameters() const {
+    cout << "\n------------------------------\n---Output field parameters:---\n------------------------------\n";
+    cout << "Size X:\t" << GetSizeX() << endl;
+    cout << "Size Y:\t" << GetSizeY() << endl;
+    cout << "Size Z:\t" << GetSizeZ() << endl;
+    cout << "Temperature:\t" << *T << endl;
+    cout << "Steam energy:\t" << *steamEnergy_ << endl;
+    cout << "Substances count:\t" << subs.size() << endl;
+    for (const pSub & sub : subs) {
+        cout << sub->GetName() << "\t" << sub->GetFillCount() << endl;
+    }
+    cout << "Energy count:\t" << energy.size() << endl;
+    for (const Energy & en : energy) {
+        cout << en.name1 << "-" << en.name2 << " E=" << en.energy << " H="
+                << *en.energyH << " S=" << *en.energyS << endl;
+    }
+    cout << "Energy cell count:\t" << energyCell.size() << endl;
+    for (const Energy & en : energyCell) {
+        cout << en.name1 << "-" << en.name2 << " E=" << en.energy << " H="
+                << *en.energyH << " S=" << *en.energyS << endl;
+    }
+    cout << "------------------------------\n---Output field parameters:---\n------------------------------\n";
+    cout << "Press any key to continue ... \n";
+    string s;
+    cin >> s;
+}
+
+void Margolus::PrintBlock(Block& block) const {
+    cout << "\n";
+    for(uint x = 0; x < 2; ++x) {
+        for (uint y = 0; y < 2; ++y) {
+            cout << " - ";
+            for (pSub sub : block.cells[x][y].GetSubs()) {
+                switch (sub->GetType()) {
+                    case SOLID:
+                        cout << "S";
+                        break;
+                    case ACTIVE:
+                        cout << "A";
+                        break;
+                    case MODIFIER:
+                        cout << "M";
+                }
+            }
+            cout << "\t";
+        }
+        cout << "\n";
+    }
+}
+
+bool Margolus::CheckEmpty(cuint& ix, cuint& iy) const {
+    for (uint x = 0; x < 2; ++x) {
+        for (uint y = 0; y < 2; ++y) {
+            if (modifierMove && cells[x + ix][y + iy][0].HaveLiquid()) {
+                return false;
+            } else if (cells[x + ix][y + iy][0].HaveActive()) {
+                return false;
+            }  
+        }
+    }
+    return true;
+}
+
+bool Margolus::CheckEmpty(cuint& ix, cuint& iy, cuint& iz) const {
+    for (uint x = 0; x < 2; ++x) {
+        for (uint y = 0; y < 2; ++y) {
+            for (uint z = 0; z < 2; ++z) {
+                if (modifierMove && cells[x + ix][y + iy][z + iz].HaveLiquid()) {
+                    return false;
+                } else if (cells[x + ix][y + iy][z + iz].HaveActive()) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool Margolus::CheckMod(cuint& ix, cuint& iy) const {
+    for (uint x = 0; x < 2; ++x) {
+        for (uint y = 0; y < 2; ++y) {
+            if (cells[x + ix][y + iy][0].HaveModifier()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Margolus::CheckMod(cuint& ix, cuint& iy, cuint& iz) const {
+    for (uint x = 0; x < 2; ++x) {
+        for (uint y = 0; y < 2; ++y) {
+            for (uint z = 0; z < 2; ++z) {
+                if (cells[x + ix][y + iy][z + iz].HaveModifier()) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool Margolus::CheckActive(cuint& ix, cuint& iy) const {
+    for (uint x = 0; x < 2; ++x) {
+        for (uint y = 0; y < 2; ++y) {
+            if (cells[x + ix][y + iy][0].HaveActive()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Margolus::CheckActive(cuint& ix, cuint& iy, cuint& iz) const {
+    for (uint x = 0; x < 2; ++x) {
+        for (uint y = 0; y < 2; ++y) {
+            for (uint z = 0; z < 2; ++z) {
+                if (cells[x + ix][y + iy][z + iz].HaveActive()) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 void Margolus::PareEnergy(Cell& cellIn, Cell& cellOut, double& energy) {
@@ -546,82 +705,6 @@ double Margolus::CalculationBlockEnergy(const Block3D& block, cuint& ix,
     }
     
     return sumEnergy;
-}
-
-bool Margolus::CheckEmpty(cuint& ix, cuint& iy) const {
-    for (uint x = 0; x < 2; ++x) {
-        for (uint y = 0; y < 2; ++y) {
-            if (modifierMove && cells[x + ix][y + iy][0].HaveLiquid()) {
-                return false;
-            } else if (cells[x + ix][y + iy][0].HaveActive()) {
-                return false;
-            }  
-        }
-    }
-    return true;
-}
-
-bool Margolus::CheckEmpty(cuint& ix, cuint& iy, cuint& iz) const {
-    for (uint x = 0; x < 2; ++x) {
-        for (uint y = 0; y < 2; ++y) {
-            for (uint z = 0; z < 2; ++z) {
-                if (modifierMove && cells[x + ix][y + iy][z + iz].HaveLiquid()) {
-                    return false;
-                } else if (cells[x + ix][y + iy][z + iz].HaveActive()) {
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
-bool Margolus::CheckMod(cuint& ix, cuint& iy) const {
-    for (uint x = 0; x < 2; ++x) {
-        for (uint y = 0; y < 2; ++y) {
-            if (cells[x + ix][y + iy][0].HaveModifier()) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-bool Margolus::CheckMod(cuint& ix, cuint& iy, cuint& iz) const {
-    for (uint x = 0; x < 2; ++x) {
-        for (uint y = 0; y < 2; ++y) {
-            for (uint z = 0; z < 2; ++z) {
-                if (cells[x + ix][y + iy][z + iz].HaveModifier()) {
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-}
-
-bool Margolus::CheckActive(cuint& ix, cuint& iy) const {
-    for (uint x = 0; x < 2; ++x) {
-        for (uint y = 0; y < 2; ++y) {
-            if (cells[x + ix][y + iy][0].HaveActive()) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-bool Margolus::CheckActive(cuint& ix, cuint& iy, cuint& iz) const {
-    for (uint x = 0; x < 2; ++x) {
-        for (uint y = 0; y < 2; ++y) {
-            for (uint z = 0; z < 2; ++z) {
-                if (cells[x + ix][y + iy][z + iz].HaveActive()) {
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
 }
 
 void Margolus::CreateRotateNotBlock(Block & block, cuint& ix, cuint& iy) {
@@ -1164,40 +1247,4 @@ void Margolus::ChangeBlock(const Block3D& block, cuint& ix, cuint& iy, cuint& iz
             }
         }
     }
-}
-
-void Margolus::UpdateEnergies() {
-    for (Energy & en : energy) {
-        en.UpdateEnergy(*T);
-    }
-    for (Energy & en : energyCell) {
-        en.UpdateEnergy(*T);
-    }
-}
-
-void Margolus::PrintParameters() const {
-    cout << "\n------------------------------\n---Output field parameters:---\n------------------------------\n";
-    cout << "Size X:\t" << GetSizeX() << endl;
-    cout << "Size Y:\t" << GetSizeY() << endl;
-    cout << "Size Z:\t" << GetSizeZ() << endl;
-    cout << "Temperature:\t" << *T << endl;
-    cout << "Steam energy:\t" << *steamEnergy_ << endl;
-    cout << "Substances count:\t" << subs.size() << endl;
-    for (const pSub & sub : subs) {
-        cout << sub->GetName() << "\t" << sub->GetFillCount() << endl;
-    }
-    cout << "Energy count:\t" << energy.size() << endl;
-    for (const Energy & en : energy) {
-        cout << en.name1 << "-" << en.name2 << " E=" << en.energy << " H="
-                << *en.energyH << " S=" << *en.energyS << endl;
-    }
-    cout << "Energy cell count:\t" << energyCell.size() << endl;
-    for (const Energy & en : energyCell) {
-        cout << en.name1 << "-" << en.name2 << " E=" << en.energy << " H="
-                << *en.energyH << " S=" << *en.energyS << endl;
-    }
-    cout << "------------------------------\n---Output field parameters:---\n------------------------------\n";
-    cout << "Press any key to continue ... \n";
-    string s;
-    cin >> s;
 }
