@@ -47,7 +47,7 @@ bool Cell::AddSub(pSub newSub) {
     }
     
     if (haveModifier) {
-        if (newSub->GetType() == ACTIVE){// != SOLID) {
+        if (newSub->GetType() == ACTIVE) {// != SOLID) {
             subs.push_back(newSub);
             return true;
         }
@@ -80,7 +80,7 @@ bool Cell::HaveActive() {
 
 bool Cell::HaveLiquid() {
     for (pSub & sub : subs) {
-        return sub->GetType() != SOLID;// ? false : true;
+        return sub->GetType() != SOLID;
     }
     return false;
 }
@@ -96,13 +96,13 @@ bool Cell::HaveModifier() {
 
 bool Cell::HaveSolid() {
     for (pSub & sub : subs) {
-        return sub->GetType() == SOLID;// ? true : false;
+        return sub->GetType() == SOLID;
     }
     return false;
 }
 
 bool Cell::IsEmpty() const {
-    return subs.size() == 0 ? true : false;
+    return (subs.size() == 0);
 }
 
 vector<pSub> Cell::GetSubs() const {

@@ -1886,7 +1886,7 @@ private:
         return false;
     }
     
-    int OutPickTime(Margolus * CAM, const char* path, int * Ax) {
+    int OutPickTime(Margolus * CAM, cchar* path, int * Ax) {
         int result = 0;
         double fr = 0.5;
         ifstream in;
@@ -2193,11 +2193,11 @@ private:
                         g = 255 - (c % 64 * 255) / 64;
                         break;
                 }
-                img[(ix + iy * x) * F + 0] = (uchar) (r);
-                img[(ix + iy * x) * F + 1] = (uchar) (g);
-                img[(ix + iy * x) * F + 2] = (uchar) (b);
+                img[(ix + iy * x) * F + 0] = (uchar)(r);
+                img[(ix + iy * x) * F + 1] = (uchar)(g);
+                img[(ix + iy * x) * F + 2] = (uchar)(b);
                 // PNG!
-                img[(ix + iy * x) * F + 3] = (uchar) (255);
+                img[(ix + iy * x) * F + 3] = (uchar)(255);
             }
         }
 
@@ -2205,7 +2205,7 @@ private:
         SavePNG(path.c_str(), img, x, y);
     }
     
-    void SavePNG(const char* path, uchar* imageData, int width, int height) {
+    void SavePNG(cchar* path, uchar* imageData, int width, int height) {
         FILE *f = fopen(path, "wb");
         if (!f) {
             printf("Can't open file! %s", path);
@@ -2281,11 +2281,11 @@ private:
                 Cell cell = CAM->GetCell(ix, iy, iz);
                 c = cell.GetSubCount();
                 if (c == 0) {
-                    img[(ix + iy * CAM->GetSizeX()) * F + 0] = (uchar) (255);
-                    img[(ix + iy * CAM->GetSizeX()) * F + 1] = (uchar) (255);
-                    img[(ix + iy * CAM->GetSizeX()) * F + 2] = (uchar) (255);
+                    img[(ix + iy * CAM->GetSizeX()) * F + 0] = (uchar)(255);
+                    img[(ix + iy * CAM->GetSizeX()) * F + 1] = (uchar)(255);
+                    img[(ix + iy * CAM->GetSizeX()) * F + 2] = (uchar)(255);
                 // PNG!
-                    img[(ix + iy * CAM->GetSizeX()) * F + 3] = (uchar) (255);
+                    img[(ix + iy * CAM->GetSizeX()) * F + 3] = (uchar)(255);
                     continue;
                 }
                 for (pSub & sub : cell.GetSubs()) {
@@ -2298,11 +2298,11 @@ private:
                 g /= c;
                 b /= c;
                 
-                img[(ix + iy * CAM->GetSizeX()) * F + 0] = (uchar) (r);
-                img[(ix + iy * CAM->GetSizeX()) * F + 1] = (uchar) (g);
-                img[(ix + iy * CAM->GetSizeX()) * F + 2] = (uchar) (b);
+                img[(ix + iy * CAM->GetSizeX()) * F + 0] = (uchar)(r);
+                img[(ix + iy * CAM->GetSizeX()) * F + 1] = (uchar)(g);
+                img[(ix + iy * CAM->GetSizeX()) * F + 2] = (uchar)(b);
                 // PNG!
-                img[(ix + iy * CAM->GetSizeX()) * F + 3] = (uchar) (255);
+                img[(ix + iy * CAM->GetSizeX()) * F + 3] = (uchar)(255);
             }
         }
 

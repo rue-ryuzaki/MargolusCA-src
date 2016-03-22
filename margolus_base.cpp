@@ -1,8 +1,6 @@
 #include "margolus_base.h"
 
-//#include <list>
 //#include <iostream>
-//#include <fstream>
 //#include <omp.h>
 //#define foreach(T, c, i) for(T::iterator i = c.begin(); i!=c.end(); ++i)
 
@@ -455,9 +453,9 @@ double Margolus::CalculationBlockEnergy(const Block& block, cuint& ix, cuint& iy
         PareEnergyFull(cellIn, cellOut, sumEnergy);
     }
     
-    //if (block.move[movement] > 0) {
+    if (!moveForward || block.move[movement] > 0) {
         sumEnergy += block.move[movement] * *steamEnergy_;
-    //}
+    }
     
     return sumEnergy;
 }
@@ -543,9 +541,9 @@ double Margolus::CalculationBlockEnergy(const Block3D& block, cuint& ix,
         }
     }
     
-    //if (block.move[movement] > 0) {
+    if (!moveForward || block.move[movement] > 0) {
         sumEnergy += block.move[movement] * *steamEnergy_;
-    //}
+    }
     
     return sumEnergy;
 }
@@ -628,7 +626,7 @@ bool Margolus::CheckActive(cuint& ix, cuint& iy, cuint& iz) const {
 
 void Margolus::CreateRotateNotBlock(Block & block, cuint& ix, cuint& iy) {
     //block.rotate = UnMoved;
-    //memset (block.move, 0, sizeof(block.move));
+    //memset(block.move, 0, sizeof(block.move));
     for (uint x = 0; x < 2; ++x) {
         for (uint y = 0; y < 2; ++y) {
             block.cells[x][y] = cells[x + ix][y + iy][0];
@@ -638,7 +636,7 @@ void Margolus::CreateRotateNotBlock(Block & block, cuint& ix, cuint& iy) {
 
 void Margolus::CreateRotateNotBlock3D(Block3D & block, cuint& ix, cuint& iy, cuint& iz) {
     //block.rotate = UnMoved3;
-    //memset (block.move, 0, sizeof(block.move));
+    //memset(block.move, 0, sizeof(block.move));
     for (uint x = 0; x < 2; ++x) {
         for (uint y = 0; y < 2; ++y) {
             for (uint z = 0; z < 2; ++z) {
@@ -651,7 +649,7 @@ void Margolus::CreateRotateNotBlock3D(Block3D & block, cuint& ix, cuint& iy, cui
 void Margolus::CreateRotateBlock(Block & block, Rotate rotate, cuint& ix,
         cuint& iy, bool act, bool mod) {
     block.rotate = rotate;
-    memset (block.move, 0, sizeof(block.move));
+    memset(block.move, 0, sizeof(block.move));
     // front
     for (uint x = 0; x < 2; ++x) {
         for (uint y = 0; y < 2; ++y) {
@@ -764,7 +762,7 @@ void Margolus::CreateRotateBlock(Block & block, Rotate rotate, cuint& ix,
 void Margolus::CreateRotateBlock3D(Block3D & block, Rotate3D rotate, cuint& ix,
         cuint& iy, cuint& iz, bool act, bool mod) {
     block.rotate = rotate;
-    memset (block.move,0, sizeof(block.move));
+    memset(block.move, 0, sizeof(block.move));
     // front
     for (uint x = 0; x < 2; ++x) {
         for (uint y = 0; y < 2; ++y) {
@@ -783,8 +781,7 @@ void Margolus::CreateRotateBlock3D(Block3D & block, Rotate3D rotate, cuint& ix,
     
     switch (rotate) {
         case ClockWiceX:
-        {
-            for (uint x = 0; x < 2; ++x){
+            for (uint x = 0; x < 2; ++x) {
                 for (uint i = 0; i < 4; ++i) {
                     Cell cell = cells[ix + x][iy + indexF[i][0]][iz + indexF[i][1]];
 
@@ -826,11 +823,9 @@ void Margolus::CreateRotateBlock3D(Block3D & block, Rotate3D rotate, cuint& ix,
                     }
                 }
             }
-        }
-        break;
+            break;
         case CounterClockWiceX:
-        {
-            for (uint x = 0; x < 2; ++x){
+            for (uint x = 0; x < 2; ++x) {
                 for (uint i = 0; i < 4; ++i) {
                     Cell cell = cells[ix + x][iy + indexB[i][0]][iz + indexB[i][1]];
 
@@ -872,11 +867,9 @@ void Margolus::CreateRotateBlock3D(Block3D & block, Rotate3D rotate, cuint& ix,
                     }
                 }
             }
-        }
-        break;
+            break;
         case ClockWiceY:
-        {
-            for (uint y = 0; y < 2; ++y){
+            for (uint y = 0; y < 2; ++y) {
                 for (uint i = 0; i < 4; ++i) {
                     Cell cell = cells[ix + indexF[i][1]][iy + y][iz + indexF[i][0]];
 
@@ -918,11 +911,9 @@ void Margolus::CreateRotateBlock3D(Block3D & block, Rotate3D rotate, cuint& ix,
                     }
                 }
             }
-        }
-        break;
+            break;
         case CounterClockWiceY:
-        {
-            for (uint y = 0; y < 2; ++y){
+            for (uint y = 0; y < 2; ++y) {
                 for (uint i = 0; i < 4; ++i) {
                     Cell cell = cells[ix + indexB[i][1]][iy + y][iz + indexB[i][0]];
 
@@ -964,11 +955,9 @@ void Margolus::CreateRotateBlock3D(Block3D & block, Rotate3D rotate, cuint& ix,
                     }
                 }
             }
-        }
-        break;
+            break;
         case ClockWiceZ:
-        {
-            for (uint z = 0; z < 2; ++z){
+            for (uint z = 0; z < 2; ++z) {
                 for (uint i = 0; i < 4; ++i) {
                     Cell cell = cells[ix + indexF[i][0]][iy + indexF[i][1]][iz + z];
 
@@ -1010,11 +999,9 @@ void Margolus::CreateRotateBlock3D(Block3D & block, Rotate3D rotate, cuint& ix,
                     }
                 }
             }
-        }
-        break;
+            break;
         case CounterClockWiceZ:
-        {
-            for (uint z = 0; z < 2; ++z){
+            for (uint z = 0; z < 2; ++z) {
                 for (uint i = 0; i < 4; ++i) {
                     Cell cell = cells[ix + indexB[i][0]][iy + indexB[i][1]][iz + z];
 
@@ -1056,8 +1043,7 @@ void Margolus::CreateRotateBlock3D(Block3D & block, Rotate3D rotate, cuint& ix,
                     }
                 }
             }
-        }
-        break;
+            break;
     }
     
     for (uint x = 0; x < 2; ++x) {
@@ -1099,8 +1085,7 @@ bool Margolus::CheckCanRotate3D(Rotate3D rotate, cuint& ix, cuint& iy, cuint& iz
     // check
     switch (rotate) {
         case ClockWiceX:
-        {
-            for (uint x = 0; x < 2; ++x){
+            for (uint x = 0; x < 2; ++x) {
                 for (uint i = 0; i < 4; ++i) {
                     if (cells[ix + x][iy + indexF[i][0]][iz + indexF[i][1]].HaveActive() &&
                             cells[ix + x][iy + indexF[i + 1][0]][iz + indexF[i + 1][1]].HaveSolid()) {
@@ -1108,11 +1093,9 @@ bool Margolus::CheckCanRotate3D(Rotate3D rotate, cuint& ix, cuint& iy, cuint& iz
                     }
                 }
             }
-        }
-        break;
+            break;
         case CounterClockWiceX:
-        {
-            for (uint x = 0; x < 2; ++x){
+            for (uint x = 0; x < 2; ++x) {
                 for (uint i = 0; i < 4; ++i) {
                     if (cells[ix + x][iy + indexF[i][0]][iz + indexF[i][1]].HaveSolid() &&
                             cells[ix + x][iy + indexF[i + 1][0]][iz + indexF[i + 1][1]].HaveActive()) {
@@ -1120,11 +1103,9 @@ bool Margolus::CheckCanRotate3D(Rotate3D rotate, cuint& ix, cuint& iy, cuint& iz
                     }
                 }
             }
-        }
-        break;
+            break;
         case ClockWiceY:
-        {
-            for (uint y = 0; y < 2; ++y){
+            for (uint y = 0; y < 2; ++y) {
                 for (uint i = 0; i < 4; ++i) {
                     if (cells[ix + indexF[i][1]][iy + y][iz + indexF[i][0]].HaveActive() &&
                             cells[ix + indexF[i + 1][1]][iy + y][iz + indexF[i + 1][0]].HaveSolid()) {
@@ -1132,11 +1113,9 @@ bool Margolus::CheckCanRotate3D(Rotate3D rotate, cuint& ix, cuint& iy, cuint& iz
                     }
                 }
             }
-        }
-        break;
+            break;
         case CounterClockWiceY:
-        {
-            for (uint y = 0; y < 2; ++y){
+            for (uint y = 0; y < 2; ++y) {
                 for (uint i = 0; i < 4; ++i) {
                     if (cells[ix + indexF[i][1]][iy + y][iz + indexF[i][0]].HaveSolid() &&
                             cells[ix + indexF[i + 1][1]][iy + y][iz + indexF[i + 1][0]].HaveActive()) {
@@ -1144,11 +1123,9 @@ bool Margolus::CheckCanRotate3D(Rotate3D rotate, cuint& ix, cuint& iy, cuint& iz
                     }
                 }
             }
-        }
-        break;
+            break;
         case ClockWiceZ:
-        {
-            for (uint z = 0; z < 2; ++z){
+            for (uint z = 0; z < 2; ++z) {
                 for (uint i = 0; i < 4; ++i) {
                     if (cells[ix + indexF[i][0]][iy + indexF[i][1]][iz + z].HaveActive() &&
                             cells[ix + indexF[i + 1][0]][iy + indexF[i + 1][1]][iz + z].HaveSolid()) {
@@ -1156,11 +1133,9 @@ bool Margolus::CheckCanRotate3D(Rotate3D rotate, cuint& ix, cuint& iy, cuint& iz
                     }
                 }
             }
-        }
-        break;
+            break;
         case CounterClockWiceZ:
-        {
-            for (uint z = 0; z < 2; ++z){
+            for (uint z = 0; z < 2; ++z) {
                 for (uint i = 0; i < 4; ++i) {
                     if (cells[ix + indexF[i][0]][iy + indexF[i][1]][iz + z].HaveSolid() &&
                             cells[ix + indexF[i + 1][0]][iy + indexF[i + 1][1]][iz + z].HaveActive()) {
@@ -1168,8 +1143,7 @@ bool Margolus::CheckCanRotate3D(Rotate3D rotate, cuint& ix, cuint& iy, cuint& iz
                     }
                 }
             }
-        }
-        break;
+            break;
     }
     return true;
 }

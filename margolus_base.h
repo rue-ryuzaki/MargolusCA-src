@@ -152,6 +152,7 @@ protected:
     const double R = 8.3144598;
     double* T = 0;
     bool modifierMove = false;
+    bool moveForward  = false;
 };
 
 #endif	/* MARGOLUS_H */

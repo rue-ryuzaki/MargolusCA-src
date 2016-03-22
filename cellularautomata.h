@@ -54,19 +54,19 @@ public:
         const vector<locate>& locations = vector<locate>());
     
     inline uint GetSubCount() const { return subs.size(); }
-    void SaveFieldBin(const char* path);
-    void SaveFieldText(const char* path);
-    void LoadFieldBin(const char* path);
-    void LoadFieldText(const char* path);
-    void LoadFieldTextOld(const char* path);
-    void LoadFieldTextXYZN(const char* path);
-    void LoadFieldTextXY_M(const char* path, string sol, string mod);
-    void LoadFieldTextXYZM(const char* path, string sol, string mod);
-    void LoadFieldTextXYZX(const char* path);
-    void LoadFieldTextXYZ(const char* path, string name);
-    void LoadFieldTextXYZR(const char* path, string name);
-    void SaveToImage(const char* path, uchar* imageData);
-    void SaveToImagePNG(const char* path, uchar* imageData);
+    void SaveFieldBin(cchar* path);
+    void SaveFieldText(cchar* path);
+    void LoadFieldBin(cchar* path);
+    void LoadFieldText(cchar* path);
+    void LoadFieldTextOld(cchar* path);
+    void LoadFieldTextXYZN(cchar* path);
+    void LoadFieldTextXY_M(cchar* path, string sol, string mod);
+    void LoadFieldTextXYZM(cchar* path, string sol, string mod);
+    void LoadFieldTextXYZX(cchar* path);
+    void LoadFieldTextXYZ(cchar* path, string name);
+    void LoadFieldTextXYZR(cchar* path, string name);
+    void SaveToImage(cchar* path, uchar* imageData);
+    void SaveToImagePNG(cchar* path, uchar* imageData);
     uint Layer();
     uint Adsorbed() const;
     void ImportSubs(CellularAutomata * CA);

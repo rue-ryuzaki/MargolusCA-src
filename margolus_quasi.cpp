@@ -334,9 +334,9 @@ double MargolusQuasi::CalculationBlockEnergy(const Block3D& block, cuint& ix,
 double MargolusQuasi::QuasiBlockEnergy(const Block& block) {
     double sumEnergy = 0.0;
     
-    //if (block.move[movement] > 0) {
+    if (!moveForward || block.move[movement] > 0) {
         sumEnergy += block.move[movement] * *steamEnergy_;
-    //}
+    }
         
     return sumEnergy;
 }
@@ -344,9 +344,9 @@ double MargolusQuasi::QuasiBlockEnergy(const Block& block) {
 double MargolusQuasi::QuasiBlockEnergy(const Block3D& block) {
     double sumEnergy = 0.0;
     
-    //if (block.move[movement] > 0) {
+    if (!moveForward || block.move[movement] > 0) {
         sumEnergy += block.move[movement] * *steamEnergy_;
-    //}
+    }
     
     return block.move[movement] * *steamEnergy_;;
 }

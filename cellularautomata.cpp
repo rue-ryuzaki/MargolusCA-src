@@ -387,7 +387,7 @@ int CellularAutomata::GetSubI(const string& name) {
     return -1;
 }
 
-void CellularAutomata::SaveToImage(const char* path, uchar* imageData) {
+void CellularAutomata::SaveToImage(cchar* path, uchar* imageData) {
         //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
     FILE *f = fopen(path, "wb"); //f = fopen(pathImg.c_str(),"wb");
     if (!f) {
@@ -399,18 +399,18 @@ void CellularAutomata::SaveToImage(const char* path, uchar* imageData) {
     uint filesize = 54 + 3 * width * height;
     uchar bmpfileheader[14] = {'B', 'M', 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 0};
     uchar bmpinfoheader[40] = {40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 24, 0};
-    bmpfileheader[ 2] = (uchar) (filesize);
-    bmpfileheader[ 3] = (uchar) (filesize >> 8);
-    bmpfileheader[ 4] = (uchar) (filesize >> 16);
-    bmpfileheader[ 5] = (uchar) (filesize >> 24);
-    bmpinfoheader[ 4] = (uchar) (width);
-    bmpinfoheader[ 5] = (uchar) (width >> 8);
-    bmpinfoheader[ 6] = (uchar) (width >> 16);
-    bmpinfoheader[ 7] = (uchar) (width >> 24);
-    bmpinfoheader[ 8] = (uchar) (height);
-    bmpinfoheader[ 9] = (uchar) (height >> 8);
-    bmpinfoheader[10] = (uchar) (height >> 16);
-    bmpinfoheader[11] = (uchar) (height >> 24);
+    bmpfileheader[ 2] = (uchar)(filesize);
+    bmpfileheader[ 3] = (uchar)(filesize >> 8);
+    bmpfileheader[ 4] = (uchar)(filesize >> 16);
+    bmpfileheader[ 5] = (uchar)(filesize >> 24);
+    bmpinfoheader[ 4] = (uchar)(width);
+    bmpinfoheader[ 5] = (uchar)(width >> 8);
+    bmpinfoheader[ 6] = (uchar)(width >> 16);
+    bmpinfoheader[ 7] = (uchar)(width >> 24);
+    bmpinfoheader[ 8] = (uchar)(height);
+    bmpinfoheader[ 9] = (uchar)(height >> 8);
+    bmpinfoheader[10] = (uchar)(height >> 16);
+    bmpinfoheader[11] = (uchar)(height >> 24);
     //unsigned char tempColors = 0;
     fwrite(bmpfileheader, 1, 14, f);
     fwrite(bmpinfoheader, 1, 40, f);
@@ -423,7 +423,7 @@ void CellularAutomata::SaveToImage(const char* path, uchar* imageData) {
     fclose(f);
 }
 
-void CellularAutomata::SaveToImagePNG(const char* path, uchar* imageData) {
+void CellularAutomata::SaveToImagePNG(cchar* path, uchar* imageData) {
         //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
     FILE *f = fopen(path, "wb");
     if (!f) {
@@ -486,7 +486,7 @@ void CellularAutomata::SaveToImagePNG(const char* path, uchar* imageData) {
     fclose(f);
 }
 
-void CellularAutomata::SaveFieldText(const char* path) {
+void CellularAutomata::SaveFieldText(cchar* path) {
     ofstream out;
     out.open(path, ios_base::trunc);
     out << "iteration: " << iteration << "\n";
@@ -507,7 +507,7 @@ void CellularAutomata::SaveFieldText(const char* path) {
     out.close();
 }
 
-void CellularAutomata::LoadFieldText(const char* path) {
+void CellularAutomata::LoadFieldText(cchar* path) {
     //SetEmptyField();
     ifstream in;
     in.open(path);
@@ -545,7 +545,7 @@ void CellularAutomata::LoadFieldText(const char* path) {
     std::cout << "Loading field " << path << " Done!\n";
 }
 
-void CellularAutomata::LoadFieldTextOld(const char* path) {
+void CellularAutomata::LoadFieldTextOld(cchar* path) {
     //SetEmptyField();
     ifstream in;
     in.open(path);
@@ -592,7 +592,7 @@ void CellularAutomata::LoadFieldTextOld(const char* path) {
     std::cout << "Loading field " << path << " Done!\n";
 }
 
-void CellularAutomata::LoadFieldTextXYZN(const char* path) {
+void CellularAutomata::LoadFieldTextXYZN(cchar* path) {
     //SetEmptyField();
     //"x_y_z_name"
     ifstream in;
@@ -611,7 +611,7 @@ void CellularAutomata::LoadFieldTextXYZN(const char* path) {
     std::cout << "Loading field " << path << " Done!\n";
 }
 
-void CellularAutomata::LoadFieldTextXY_M(const char* path, string sol, string mod) {
+void CellularAutomata::LoadFieldTextXY_M(cchar* path, string sol, string mod) {
     //SetEmptyField();
     //"x_y_-_mod"
     ifstream in;
@@ -637,7 +637,7 @@ void CellularAutomata::LoadFieldTextXY_M(const char* path, string sol, string mo
     std::cout << "Loading field " << path << " Done!\n";
 }
 
-void CellularAutomata::LoadFieldTextXYZM(const char* path, string sol, string mod) {
+void CellularAutomata::LoadFieldTextXYZM(cchar* path, string sol, string mod) {
     //SetEmptyField();
     //"x_y_-_mod"
     ifstream in;
@@ -664,7 +664,7 @@ void CellularAutomata::LoadFieldTextXYZM(const char* path, string sol, string mo
     std::cout << "Loading field " << path << " Done!\n";
 }
 
-void CellularAutomata::LoadFieldTextXYZX(const char* path) {
+void CellularAutomata::LoadFieldTextXYZX(cchar* path) {
     //SetEmptyField();
     //"x_y_-_mod"
     ifstream in;
@@ -695,7 +695,7 @@ void CellularAutomata::LoadFieldTextXYZX(const char* path) {
     std::cout << "Loading field " << path << " Done!\n";
 }
 
-void CellularAutomata::LoadFieldTextXYZ(const char* path, string name) {
+void CellularAutomata::LoadFieldTextXYZ(cchar* path, string name) {
     //SetEmptyField();
     //"x_y_z"
     ifstream in;
@@ -714,7 +714,7 @@ void CellularAutomata::LoadFieldTextXYZ(const char* path, string name) {
     std::cout << "Loading field " << path << " Done!\n";
 }
 
-void CellularAutomata::LoadFieldTextXYZR(const char* path, string name) {
+void CellularAutomata::LoadFieldTextXYZR(cchar* path, string name) {
     //SetEmptyField();
     //"x_y_z_r"
     ifstream in;
@@ -759,23 +759,23 @@ void CellularAutomata::LoadFieldTextXYZR(const char* path, string name) {
     std::cout << "Loading field " << path << " Done!\n";
 }
 
-void CellularAutomata::LoadFieldBin(const char* path){
+void CellularAutomata::LoadFieldBin(cchar* path){
     //ofstream file; file.open(path, ios::binary); int text; while ((text = file..get()) != EOF){
     //    cout << static_cast<char>(text); }
-    ifstream in(path,ios::binary|ios::in); //Открыли для только для чтения в бинарном режиме
-    in.read((char*)&iteration,sizeof iteration);
-    in.read((char*)&subs,sizeof subs);
-    in.read((char*)&cells,sizeof cells); //Считали информацию в объект О
+    ifstream in(path, ios::binary | ios::in); //Открыли для только для чтения в бинарном режиме
+    in.read((char*)&iteration, sizeof(iteration));
+    in.read((char*)&subs, sizeof(subs));
+    in.read((char*)&cells, sizeof(cells)); //Считали информацию в объект О
     in.close(); //Закрыли открытый файл 
 //char text[1000]; while(!file.eof()) { file<<text; cout<<text<<endl; }
     std::cout << "Loading field " << path << " Done!\n";
 }
 
-void CellularAutomata::SaveFieldBin(const char* path){
-    ofstream out(path,ios::binary|ios::out); //Открыли для записи в бинарном режиме
-    out.write((char*)&iteration,sizeof iteration);
-    out.write((char*)&subs,sizeof subs);
-    out.write((char*)&cells,sizeof cells); //Записали объект А в открытый файл
+void CellularAutomata::SaveFieldBin(cchar* path){
+    ofstream out(path, ios::binary | ios::out); //Открыли для записи в бинарном режиме
+    out.write((char*)&iteration, sizeof(iteration));
+    out.write((char*)&subs, sizeof(subs));
+    out.write((char*)&cells, sizeof(cells)); //Записали объект А в открытый файл
     out.close(); //Закрыли открытый файл
 }
 
