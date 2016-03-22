@@ -1613,13 +1613,67 @@ public:
         }
     }
 
-    void TestRun() {
+    void RunTest(cchar* param) {
         string fname = "test.out";
-        int x = 400;
-        int y = 400;
+        string sparam = param;
+        string inputs = sparam.substr(8);
+        vector<string> vs = split(inputs, '-');
+        if (vs.size() != 7) {
+            cerr << "Expect 7 params\n";
+            return;
+        }
+        int x;// = 400;
+        int y;// = 400;
         int z = 1;
-        int iter = 1000;
-        int count = 1000;
+        int iter;// = 1000;
+        int count;// = 1000;
+        int gridtype;
+        bool filemode; // true - new, false - append
+        try {
+            x = stoi(vs[0]);
+            y = stoi(vs[1]);
+            iter = stoi(vs[2]);
+            if (iter < 1) {
+                cerr << "Iteration count < 1\n";
+                return;
+            }
+            count = stoi(vs[3]);
+            if (count < 1) {
+                cerr << "Calculation count < 1\n";
+                return;
+            }
+            gridtype = stoi(vs[4]);
+            if (gridtype < 0 || gridtype > 1) {
+                cerr << "Error subiteration type (expect 0 or 1)\n";
+                return;
+            }
+            int mType = stoi(vs[5]);
+            switch (mType) {
+                case 0:
+                    model = margolus_default;
+                    break;
+                case 1:
+                    model = margolus_quasi;
+                    break;
+                case 2:
+                    model = margolus_quasi_x;
+                    break;
+                default:
+                    model = margolus_default;
+                    break;
+            }
+            if (vs[6] == "N") {
+                filemode = true;
+            } else if (vs[6] == "A") {
+                filemode = false;
+            } else {
+                cerr << "Error file mode (N - new, A - append)\n";
+                return;
+            }
+        } catch (...) {
+            cerr << "Error parse params\n";
+            return;
+        }
         double steam = 0.0;
         double T = 310.0;
         double xr = 0.0;
@@ -1632,13 +1686,12 @@ public:
                 fld[ix][iy] = 0;
             }
         }
-        
-        {
-            //ofstream out;
-            //out.open(fname.c_str(), ios_base::trunc);
-            //out.close();
+        if (filemode) {
+            // create new file
+            ofstream out;
+            out.open(fname.c_str(), ios_base::trunc);
+            out.close();
         }
-        model = margolus_default;
         for (int i = 0; i < count; ++i) {
             Margolus * CAM;
             switch (model) {
@@ -1650,6 +1703,9 @@ public:
                     break;
                 case margolus_quasi_x:
                     CAM = new MargolusQuasiX(x, y, z);
+                    break;
+                default:
+                    CAM = new Margolus(x, y, z);
                     break;
             }
             CAM->SetSteamPtr(new double(steam));
@@ -1693,7 +1749,7 @@ public:
             // 2D
             if (CAM->GetSizeZ() == 1) {
                 while (!CAM->finished) {
-                    switch (0) {
+                    switch (gridtype) {
                         case 0:
                             CAM->Calculation(0, 0);
                             CAM->Calculation(1, 1);
@@ -2342,11 +2398,9 @@ int main(int argc, char* argv[]) {
                 case param_help:
                     PrintHelp();
                     return 0;
-                    break;
                 case param_version:
                     PrintVersion();
                     return 0;
-                    break;
                 case param_extra:
                 case param_retention:
                 case param_print:
@@ -2358,16 +2412,13 @@ int main(int argc, char* argv[]) {
                 case param_name:
                     cout << "Name is " << argv[0] << endl;
                     return 0;
-                    break;
                 case param_path:
                     cout << "Path is " << AppPath() << endl;
                     return 0;
-                    break;
                 case param_example:
                     // generate example conf file
                     PrintExample();
                     return 0;
-                    break;
                 case param_output:
                     if (argc > 2) {
                         PrintHalfOutput(argv[2]);
@@ -2387,17 +2438,14 @@ int main(int argc, char* argv[]) {
                     }
                     break;
                 case param_testrun:
-                    pApp->TestRun();
-                    return 1;
-                    break;
+                    pApp->RunTest(argv[1]);
+                    return 0;
                 case param_none:
                     cout << "Unknown parameter. Use --help option\n";
                     return 1;
-                    break;
                 default:
                     cout << "Unknown parameter. Use --help option\n";
                     return 1;
-                    break;
             }
         }
     } else {

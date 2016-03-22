@@ -49,11 +49,17 @@ Usage:	margolusca [ARGUMENT] CONFIG	Run the program with current settings
 
 	margolusca --path		Display program path and exit
 
-	margolusca --example		Generate example of configuration file and exit
+	margolusca --example		Print example of configuration file and exit
 
 	margolusca --output filename	Print half-life in output file and exit
 
 	margolusca --squareNx-Ny-Nz filename	Print surface square in output file and exit
+
+		Nx	Field x size
+
+		Ny	Field y size
+
+		Nz	Field z size
 
 	margolusca [filename]		Use filename configuration file
 
@@ -63,7 +69,21 @@ Usage:	margolusca [ARGUMENT] CONFIG	Run the program with current settings
 
 	margolusca [] -print		Print field parameters
 
-	margolusca -testrun		Run test calculation
+	margolusca -testrunNx-Ny-I-C-G-T-M	Run test calculation
+
+		Nx	Field x size
+
+		Ny	Field y size
+
+		I	Iteration count
+
+		C	Calculation count
+
+		G	Subiteration type (0 - 2 subiters, 1 - 8 subiters)
+
+		T	Margolus type (0 - default, 1 - quazi, 2 - quazix)
+
+		M	File mode (N - new, A - append)
 
 Program use libconfig++ configuration file.
 
