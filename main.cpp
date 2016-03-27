@@ -1805,6 +1805,15 @@ public:
                     // TODO!
                     CAM->Calculation(0, 0, 0);
                     CAM->Calculation(1, 1, 1);
+                    switch (model) {
+                        case margolus_quasi:
+                            dynamic_cast<MargolusQuasi*>(CAM)->QuasiCalculation(0, 0, 0);
+                            dynamic_cast<MargolusQuasi*>(CAM)->QuasiCalculation(1, 1, 1);
+                            break;
+                        case margolus_quasi_x:
+                            dynamic_cast<MargolusQuasiX*>(CAM)->QuasiCalculation();
+                            break;
+                    }
                     // end TODO
                     CAM->iteration++;
                     /*if (CAM->iteration % 100 == 0) {
