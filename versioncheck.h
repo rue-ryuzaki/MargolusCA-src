@@ -25,53 +25,23 @@ struct ver {
             }
         }
         
-        switch (dot) {
-            case 1:
-            {
-                regex reg("([0-9]+).([0-9]+)");
-                smatch match;
-                if (regex_search(value, match, reg)) {
-                    for (int i = 0; i <= dot; ++i) {
-                        sub[i] = atoi(match[i + 1].str().c_str());
-                    }
-                } else {
-                    cout << "Error 1 read application version!\n";
-                    return false;
-                }
+        if (dot < 1 || dot > 3) {
+            cout << "Unknown error read application version!\n";
+            return false;
+        }
+        smatch match;
+        string regval = "([0-9]+)";
+        for (int i = 0; i < dot; ++i) {
+            regval += ".([0-9]+)";
+        }
+        regex reg(regval);
+        if (regex_search(value, match, reg)) {
+            for (int i = 0; i <= dot; ++i) {
+                sub[i] = atoi(match[i + 1].str().c_str());
             }
-                break;
-            case 2:
-            {
-                regex reg("([0-9]+).([0-9]+).([0-9]+)");
-                smatch match;
-                if (regex_search(value, match, reg)) {
-                    for (int i = 0; i <= dot; ++i) {
-                        sub[i] = atoi(match[i + 1].str().c_str());
-                    }
-                } else {
-                    cout << "Error 2 read application version!\n";
-                    return false;
-                }
-            }
-                break;
-            case 3:
-            {
-                regex reg("([0-9]+).([0-9]+).([0-9]+).([0-9]+)");
-                smatch match;
-                if (regex_search(value, match, reg)) {
-                    for (int i = 0; i <= dot; ++i) {
-                        sub[i] = atoi(match[i + 1].str().c_str());
-                    }
-                } else {
-                    cout << "Error 3 read application version!\n";
-                    return false;
-                }
-            }
-                break;
-            default:
-                cout << "Unknown error read application version!\n";
-                return false;
-                break;
+        } else {
+            cout << "Error " << dot << " read application version!\n";
+            return false;
         }
         return true;
     }

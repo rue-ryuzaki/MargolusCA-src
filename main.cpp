@@ -31,6 +31,7 @@ using namespace libconfig;
 
 struct var {
     var(string name) : name(name) { }
+    
     int*    intPtr    = nullptr;
     double* doublePtr = nullptr;
     string  name;
@@ -46,6 +47,7 @@ struct var {
 
 struct varname {
     varname(string name, string value) : name(name), value(value) { }
+    
     string name;
     string value;
 };
@@ -145,6 +147,7 @@ template <class Type>
 class VarPointer {
 public:
     VarPointer(Type * p) : point(p) { }
+    
     string  name;
     Type * point;
 private:
@@ -217,7 +220,7 @@ public:
                     // all ok!
                     break;
                 default:
-                    cerr << "Error check version\n";
+                    cerr << "Error " << checker << " check version\n";
                     cerr << "program version: " << program_version << endl;
                     cerr << "config  version: " << version << endl;
                     goodLoad = false;
@@ -2232,20 +2235,17 @@ private:
         if (!png_ptr) {
             fclose(f);
             return;
-            //goto close_file;
         }
         png_infop png_info;
         if (!(png_info = png_create_info_struct(png_ptr))) {
             png_destroy_write_struct(&png_ptr, nullptr);
             fclose(f);
             return;
-            //goto destroy_write;
         }
         if (setjmp(png_jmpbuf(png_ptr))) {
             png_destroy_write_struct(&png_ptr, nullptr);
             fclose(f);
             return;
-            //goto destroy_write;
         }
         png_init_io(png_ptr, f);
         
@@ -2277,15 +2277,13 @@ private:
         png_write_png(png_ptr, png_info, PNG_TRANSFORM_IDENTITY, nullptr);
         png_write_end(png_ptr, png_info);
 
-    //destroy_write:
         png_destroy_write_struct(&png_ptr, nullptr);
-    //close_file:
+
         fclose(f);
     }
     
     void Save2dImageToFile(Margolus * CAM, string saveDirectory, cuint& i, cuint& iz = 0) {
         uchar *img = NULL;
-        //int filesize = 54 + 3*N*N;  //w is your image width, h is image height, both int
         if (img) {
             free(img);
         }
@@ -2301,7 +2299,7 @@ private:
                     img[(ix + iy * CAM->GetSizeX()) * F + 0] = (uchar)(255);
                     img[(ix + iy * CAM->GetSizeX()) * F + 1] = (uchar)(255);
                     img[(ix + iy * CAM->GetSizeX()) * F + 2] = (uchar)(255);
-                // PNG!
+                    // PNG!
                     img[(ix + iy * CAM->GetSizeX()) * F + 3] = (uchar)(255);
                     continue;
                 }
@@ -2337,8 +2335,8 @@ private:
     
     Margolus * defCAM;
     margolus_model model = margolus_default;
-    int threads     = 1;
     Generate generator;
+    int threads     = 1;
     uint fillCount  = 0;
     uint calcStep   = 1;
     uint saveStep   = 1;
@@ -2348,8 +2346,8 @@ private:
     vector<uint> points;
     vector<pSub> iSubs;
     
-    vector<LOCATION> borders;
-    vector<statistics> stats;
+    vector<LOCATION>    borders;
+    vector<statistics>  stats;
     exit_type       et;
     structure       strctr;
     vector<var>     vars;

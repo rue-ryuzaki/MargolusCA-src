@@ -702,7 +702,7 @@ void CellularAutomata::SaveFieldText(cchar* path) {
 }
 
 void CellularAutomata::SaveToImage(cchar* path, uchar* imageData) {
-        //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
+    //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
     FILE *f = fopen(path, "wb"); //f = fopen(pathImg.c_str(),"wb");
     if (!f) {
         printf("Can't open ScreenShot File! %s", path);
@@ -738,7 +738,7 @@ void CellularAutomata::SaveToImage(cchar* path, uchar* imageData) {
 }
 
 void CellularAutomata::SaveToImagePNG(cchar* path, uchar* imageData) {
-        //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
+    //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
     FILE *f = fopen(path, "wb");
     if (!f) {
         printf("Can't open ScreenShot File! %s", path);
@@ -748,20 +748,17 @@ void CellularAutomata::SaveToImagePNG(cchar* path, uchar* imageData) {
     if (!png_ptr) {
         fclose(f);
         return;
-        //goto close_file;
     }
     png_infop png_info;
     if (!(png_info = png_create_info_struct(png_ptr))) {
         png_destroy_write_struct(&png_ptr, nullptr);
         fclose(f);
         return;
-        //goto destroy_write;
     }
     if (setjmp(png_jmpbuf(png_ptr))) {
         png_destroy_write_struct(&png_ptr, nullptr);
         fclose(f);
         return;
-        //goto destroy_write;
     }
     png_init_io(png_ptr, f);
     uint width  = size.x;
@@ -794,9 +791,8 @@ void CellularAutomata::SaveToImagePNG(cchar* path, uchar* imageData) {
     png_write_png(png_ptr, png_info, PNG_TRANSFORM_IDENTITY, nullptr);
     png_write_end(png_ptr, png_info);
 
-//destroy_write:
     png_destroy_write_struct(&png_ptr, nullptr);
-//close_file:
+
     fclose(f);
 }
 
