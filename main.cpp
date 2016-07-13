@@ -31,7 +31,7 @@ using namespace libconfig;
 struct var {
     explicit var(string name) : name(name) { }
 
-    string getName() {
+    string getName() const {
         string result = "";
         for (uint i = 1; i < name.size() - 1; ++i) {
             result += name[i];
@@ -54,8 +54,8 @@ struct varname {
 };
 
 struct varcalc {
-    string getValue(string name) {
-        for (varname & vn : varnames) {
+    string getValue(string name) const {
+        for (const varname & vn : varnames) {
             if (vn.name == name) {
                 return vn.value;
             }
@@ -63,7 +63,7 @@ struct varcalc {
         return "";
     }
     
-    string getName(string name) {
+    static string getName(string name) {
         string result = "";
         for (uint i = 1; i < name.size() - 1; ++i) {
             result += name[i];
@@ -71,9 +71,9 @@ struct varcalc {
         return result;
     }
     
-    string getTableNameSort() {
+    string getTableNameSort() const {
         vector<string> lst;
-        for (varname & vn : varnames) {
+        for (const varname & vn : varnames) {
             lst.push_back(getName(vn.name));
         }
         sort(lst.begin(), lst.end());
@@ -872,7 +872,7 @@ public:
         return result;
     }
     
-    void mkDir(string cpath) {
+    static void mkDir(string cpath) {
         string path = "";
         for (uint i = 0; i < cpath.length(); ++i) {
             if (cpath[i] != '/') {
@@ -1752,6 +1752,11 @@ public:
             }
             if (fillCount == 0) {
                 cout << "No tracked substance in field!\n" << endl;
+                for (int ix = 0; ix < x; ++ix) {
+                    delete [] fld[ix];
+                }
+                delete [] fld;
+                fld = nullptr;
                 return;
             }
             CAM->finished = false;
@@ -2074,7 +2079,7 @@ private:
         }
     }
     
-    void CountInField(Margolus * CAM, vector<uint> &result) {
+    void CountInField(Margolus * CAM, vector<uint> &result) const {
         //int[] result = new int[(points.length + 1) * (count + 1)];
         uint count = CAM->GetSubCount();
         for (uint i = 0; i < (points.size() + 1) * count; ++i) { //sizeof (points) / sizeof (int)
@@ -2335,7 +2340,7 @@ private:
         CAM->SaveToImagePNG(path.c_str(), img);
     }
     
-    Margolus * defCAM;
+    Margolus * defCAM = nullptr;
     margolus_model model = margolus_default;
     Generate generator;
     int threads     = 1;
@@ -2350,7 +2355,7 @@ private:
     
     vector<LOCATION>    borders;
     vector<statistics>  stats;
-    exit_type       et;
+    exit_type       et = iteration;
     structure       strctr;
     vector<var>     vars;
     vector<varcalc> varcalcs;
@@ -2370,7 +2375,7 @@ private:
     bool printCA     = false;
     string outpath   = "";
     bool useMySQL    = false;
-    MySQL * mySQL;
+    MySQL * mySQL = nullptr;
     
     vector<VarPointer<int>>       intVars;
     vector<VarPointer<double>>    doubleVars;

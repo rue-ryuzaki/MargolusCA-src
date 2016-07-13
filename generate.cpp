@@ -21,7 +21,7 @@ cube_location CubeLocation(string value) {
 }
 
 Generate::Generate() : type(gen_random), cube_loc(cube_center),
-        x(0.0), y(0.0), z(0.0) { }
+        x(0.0), y(0.0), z(0.0), xw(), yw(), zw(), x0(), y0(), z0() { }
 
 Generate::~Generate() { }
 

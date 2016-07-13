@@ -107,7 +107,7 @@ public:
     //void PrintBlocks();
     
 protected:
-    void PrintBlock(Block & block) const;
+    static void PrintBlock(Block & block);
     bool CheckEmpty(cuint& ix, cuint& iy) const;
     bool CheckEmpty(cuint& ix, cuint& iy, cuint& iz) const;
     bool CheckMod(cuint& ix, cuint& iy) const;

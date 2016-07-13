@@ -403,7 +403,7 @@ void Margolus::PrintParameters() const {
     cin >> s;
 }
 
-void Margolus::PrintBlock(Block& block) const {
+void Margolus::PrintBlock(Block& block) {
     cout << "\n";
     for(uint x = 0; x < 2; ++x) {
         for (uint y = 0; y < 2; ++y) {
