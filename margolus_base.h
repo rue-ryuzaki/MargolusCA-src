@@ -62,7 +62,7 @@ struct Block3D : public simpleBlock {
 class Margolus : public CellularAutomata {
 public:
     Margolus();
-    Margolus(Sizes sizes);
+    explicit Margolus(Sizes sizes);
     Margolus(cuint& sizeX, cuint& sizeY, cuint sizeZ = 1);
     ~Margolus();
 

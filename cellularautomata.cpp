@@ -359,7 +359,7 @@ void CellularAutomata::AddSub(pSub newSub) {
 }
 
 void CellularAutomata::AddSub(const SUBTYPE type, const string& name,
-        const XColor color, const vector<locate>& locations) {
+        const XColor& color, const vector<locate>& locations) {
     pSub sub;
     switch (type) {
         case ACTIVE:
@@ -701,7 +701,7 @@ void CellularAutomata::SaveFieldText(cchar* path) {
     out.close();
 }
 
-void CellularAutomata::SaveToImage(cchar* path, uchar* imageData) {
+void CellularAutomata::SaveToImage(cchar* path, uchar* imageData) const {
     //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
     FILE *f = fopen(path, "wb"); //f = fopen(pathImg.c_str(),"wb");
     if (!f) {
@@ -737,7 +737,7 @@ void CellularAutomata::SaveToImage(cchar* path, uchar* imageData) {
     fclose(f);
 }
 
-void CellularAutomata::SaveToImagePNG(cchar* path, uchar* imageData) {
+void CellularAutomata::SaveToImagePNG(cchar* path, uchar* imageData) const {
     //printf ( "Текущее время и дата: %s", asctime (timeinfo) );
     FILE *f = fopen(path, "wb");
     if (!f) {

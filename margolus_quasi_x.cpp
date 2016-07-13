@@ -32,7 +32,7 @@ void MargolusQuasiX::QuasiCalculation2D() {
                             // moved
                             double moveEn = exp(- *steamEnergy_ / (R * *T));
                             //normalization
-                            double rnd = (double)(rand()) / RAND_MAX;
+                            double rnd = double(rand()) / RAND_MAX;
                             if (rnd >= (currEn / (currEn + moveEn))) {
                                 // move!
                                 Cell inCell = Cell();
@@ -58,7 +58,7 @@ void MargolusQuasiX::QuasiCalculation2D() {
                             // moved
                             double moveEn = exp(- *steamEnergy_ / (R * *T));
                             //normalization
-                            double rnd = (double)(rand()) / RAND_MAX;
+                            double rnd = double(rand()) / RAND_MAX;
                             if (rnd >= (currEn / (currEn + moveEn))) {
                                 // move!
                                 Cell inCell = Cell();
@@ -84,7 +84,7 @@ void MargolusQuasiX::QuasiCalculation2D() {
                             // moved
                             double moveEn = exp(- *steamEnergy_ / (R * *T));
                             //normalization
-                            double rnd = (double)(rand()) / RAND_MAX;
+                            double rnd = double(rand()) / RAND_MAX;
                             if (rnd >= (currEn / (currEn + moveEn))) {
                                 // move!
                                 Cell inCell = Cell();
@@ -110,7 +110,7 @@ void MargolusQuasiX::QuasiCalculation2D() {
                             // moved
                             double moveEn = exp(- *steamEnergy_ / (R * *T));
                             //normalization
-                            double rnd = (double)(rand()) / RAND_MAX;
+                            double rnd = double(rand()) / RAND_MAX;
                             if (rnd >= (currEn / (currEn + moveEn))) {
                                 // move!
                                 Cell inCell = Cell();
@@ -147,7 +147,7 @@ void MargolusQuasiX::QuasiCalculation3D() {
                                 // moved
                                 double moveEn = exp(- *steamEnergy_ / (R * *T));
                                 //normalization
-                                double rnd = (double)(rand()) / RAND_MAX;
+                                double rnd = double(rand()) / RAND_MAX;
                                 if (rnd >= (currEn / (currEn + moveEn))) {
                                     // move!
                                     Cell inCell = Cell();
@@ -175,7 +175,7 @@ void MargolusQuasiX::QuasiCalculation3D() {
                                 // moved
                                 double moveEn = exp(- *steamEnergy_ / (R * *T));
                                 //normalization
-                                double rnd = (double)(rand()) / RAND_MAX;
+                                double rnd = double(rand()) / RAND_MAX;
                                 if (rnd >= (currEn / (currEn + moveEn))) {
                                     // move!
                                     Cell inCell = Cell();
@@ -203,7 +203,7 @@ void MargolusQuasiX::QuasiCalculation3D() {
                                 // moved
                                 double moveEn = exp(- *steamEnergy_ / (R * *T));
                                 //normalization
-                                double rnd = (double)(rand()) / RAND_MAX;
+                                double rnd = double(rand()) / RAND_MAX;
                                 if (rnd >= (currEn / (currEn + moveEn))) {
                                     // move!
                                     Cell inCell = Cell();
@@ -231,7 +231,7 @@ void MargolusQuasiX::QuasiCalculation3D() {
                                 // moved
                                 double moveEn = exp(- *steamEnergy_ / (R * *T));
                                 //normalization
-                                double rnd = (double)(rand()) / RAND_MAX;
+                                double rnd = double(rand()) / RAND_MAX;
                                 if (rnd >= (currEn / (currEn + moveEn))) {
                                     // move!
                                     Cell inCell = Cell();
@@ -259,7 +259,7 @@ void MargolusQuasiX::QuasiCalculation3D() {
                                 // moved
                                 double moveEn = exp(- *steamEnergy_ / (R * *T));
                                 //normalization
-                                double rnd = (double)(rand()) / RAND_MAX;
+                                double rnd = double(rand()) / RAND_MAX;
                                 if (rnd >= (currEn / (currEn + moveEn))) {
                                     // move!
                                     Cell inCell = Cell();
@@ -287,7 +287,7 @@ void MargolusQuasiX::QuasiCalculation3D() {
                                 // moved
                                 double moveEn = exp(- *steamEnergy_ / (R * *T));
                                 //normalization
-                                double rnd = (double)(rand()) / RAND_MAX;
+                                double rnd = double(rand()) / RAND_MAX;
                                 if (rnd >= (currEn / (currEn + moveEn))) {
                                     // move!
                                     Cell inCell = Cell();

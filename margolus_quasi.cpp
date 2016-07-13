@@ -118,7 +118,7 @@ void MargolusQuasi::QuasiCalculation(cuint& dx, cuint& dy, cuint& dz) {
                 }
                 //normalization
                 double sumProbability = 0.0;
-                double rnd = (double)(rand()) / RAND_MAX;
+                double rnd = double(rand()) / RAND_MAX;
                 for (uint i = 0; i < blockSize3D; ++i) {
                     sumProbability += blocks3D[i].energy / Z;
                     if (rnd <= sumProbability) {
@@ -185,7 +185,7 @@ void MargolusQuasi::QuasiCalculation(cuint& dx, cuint& dy) {
             }
             //normalization
             double sumProbability = 0.0;
-            double rnd = (double)(rand()) / RAND_MAX;
+            double rnd = double(rand()) / RAND_MAX;
             for (uint i = 0; i < blockSize; ++i) {
                 sumProbability += blocks[i].energy / Z;
                 if (rnd <= sumProbability) {

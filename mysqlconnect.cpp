@@ -8,7 +8,7 @@ connectDetails::connectDetails(string server, string user, string password,
         password(password), database(database), table(table) { }
 
 MySQLData::MySQLData(uint rows, uint columns) : rows(rows), columns(columns), 
-        drows(0), data(NULL) { }
+        drows(0), data(nullptr) { }
 
 MySQLData::~MySQLData() {
     ClearData();
@@ -39,7 +39,7 @@ void MySQLData::SetRows(uint row) {
     this->rows = row;
 }
 
-uint MySQLData::GetRows() {
+uint MySQLData::GetRows() const {
     return rows;
 }
 
@@ -47,7 +47,7 @@ void MySQLData::SetColumns(uint column) {
     this->columns = column;
 }
 
-uint MySQLData::GetColumns() {
+uint MySQLData::GetColumns() const {
     return columns;
 }
 
@@ -66,12 +66,13 @@ void MySQLData::SetHead(uint column, string value) {
 }
 
 void MySQLData::ClearData() {
-    if (data != NULL && data != 0) {
+    if (data != nullptr) {
         for (uint i = 0; i < drows; ++i) {
             delete[] data[i];
         }
         delete[] data;
     }
+    data = nullptr;
     head.clear();
 }
 

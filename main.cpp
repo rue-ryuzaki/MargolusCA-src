@@ -22,19 +22,15 @@
 #include "functions.h"
 
 using namespace std;
-//#define _WIN32
 
-//#ifndef To_Win
+//#ifndef _WIN32
 #include <libconfig.h++>
 using namespace libconfig;
 //#endif
 
 struct var {
-    var(string name) : name(name) { }
-    
-    int*    intPtr    = nullptr;
-    double* doublePtr = nullptr;
-    string  name;
+    explicit var(string name) : name(name) { }
+
     string getName() {
         string result = "";
         for (uint i = 1; i < name.size() - 1; ++i) {
@@ -42,6 +38,11 @@ struct var {
         }
         return result;
     }
+    
+    int*    intPtr    = nullptr;
+    double* doublePtr = nullptr;
+    
+    string  name;
     vector<string>  values;
 };
 
@@ -53,10 +54,6 @@ struct varname {
 };
 
 struct varcalc {
-    string str;
-    string dir;
-    vector<varname> varnames;
-    
     string getValue(string name) {
         for (varname & vn : varnames) {
             if (vn.name == name) {
@@ -86,6 +83,10 @@ struct varcalc {
         }
         return result;
     }
+    
+    string str;
+    string dir;
+    vector<varname> varnames;
 };
 
 struct structure {
@@ -146,7 +147,7 @@ stat_type StatType (string value) {
 template <class Type>
 class VarPointer {
 public:
-    VarPointer(Type * p) : point(p) { }
+    explicit VarPointer(Type * p) : point(p) { }
     
     string  name;
     Type * point;
@@ -812,7 +813,7 @@ public:
         return goodLoad ? (EXIT_SUCCESS) : (EXIT_FAILURE);
     }
     
-    bool VarExist(string full, string part) {
+    static bool VarExist(string full, string part) {
         for (uint i = 0; i < full.length(); ++i) {
             bool ok = true;
             uint j = 0;
@@ -880,7 +881,7 @@ public:
                 ++i;
                 if (i != cpath.length() && cpath[i] == '/') {
                     path += "//";
-#ifdef To_Win
+#ifdef _WIN32
                     mkdir(path.c_str());
 #else
                     mkdir(path.c_str(), 0777);
@@ -1851,6 +1852,7 @@ public:
             delete [] fld[ix];
         }
         delete [] fld;
+        fld = nullptr;
         if (cnt == 0) {
             return;
         }
@@ -1859,15 +1861,15 @@ public:
     }
     
 private:
-    void CalcRetention(Margolus * CAM, int * arr) {
+    static void CalcRetention(Margolus * CAM, int * arr) {
         arr[0] = CAM->GetVolume(); // summVol
         arr[1] = CAM->SolidCount(); // solidVol
         arr[2] = CAM->Layer(); // layerVol
         arr[3] = CAM->Adsorbed(); // adsorbVol
         arr[4] = CAM->Count(ACTIVE) - CAM->Adsorbed(); // active
         arr[5] = arr[4] - arr[3]; // activeVol
-        double c_st = (double)arr[5] / (arr[0] - arr[1] - arr[2]);
-        double c_m  = (double)arr[3] / arr[2];
+        double c_st = double(arr[5]) / (arr[0] - arr[1] - arr[2]);
+        double c_m  = double(arr[3]) / arr[2];
         double k = c_st / c_m;
         cout << " k is " << k << endl;
     }
@@ -1875,7 +1877,7 @@ private:
     bool IsNameInVariables(double* &pointer, string variablename) {
         for (var & v : vars) {
             if (v.name == variablename) {
-                if (v.doublePtr == nullptr || v.doublePtr == 0) {
+                if (v.doublePtr == nullptr) {
                     // create pointer
                     v.doublePtr = new double(1.0);
                     VarPointer<double> point(v.doublePtr);
@@ -1892,7 +1894,7 @@ private:
     bool IsNameInVariables(int* &pointer, string variablename) {
         for (var & v : vars) {
             if (v.name == variablename) {
-                if (v.intPtr == nullptr || v.intPtr == 0) {
+                if (v.intPtr == nullptr) {
                     // create pointer
                     v.intPtr = new int(0);
                     VarPointer<int> point(v.intPtr);
@@ -1906,7 +1908,7 @@ private:
         return false;
     }
     
-    int OutPickTime(Margolus * CAM, cchar* path, int * Ax) {
+    int OutPickTime(Margolus * CAM, cchar* path, int * Ax) const {
         int result = 0;
         double fr = 0.5;
         ifstream in;
@@ -1923,14 +1925,14 @@ private:
                 if (i == tracked) {
                     if (result == 0) {
                         int v = stoi(s);
-                        if (v <= (int)(fr * fillCount)) {
+                        if (v <= int(fr * fillCount)) {
                             result = stoi(x);
                         }
                     }
                 }
                 if (i == (tracked + (idx + 1) * count)) {
                     int v = stoi(s);
-                    if (v <= (int)(fr * fillCount)) {
+                    if (v <= int(fr * fillCount)) {
                         Ax[idx] = stoi(x);
                         ++idx;
                     }
@@ -1944,7 +1946,7 @@ private:
         return result;
     }
     
-    float Teta(float h, float s, float t, float c) {
+    static float Teta(float h, float s, float t, float c) {
         float R = 8.314;
         float lnK = h / (R * t) - s / R;
         float k = exp(-lnK);
@@ -1982,7 +1984,7 @@ private:
         }
     }
     
-    uint CountInside(Margolus * CAM) {
+    static uint CountInside(Margolus * CAM) {
         uint result = 0;
         for (uint x = 0; x < CAM->GetSizeX(); ++x) {
             for (uint y = 0; y < CAM->GetSizeY(); ++y) {
@@ -2022,7 +2024,7 @@ private:
                             case condition:
                                 uint inside = CountInside(CAM);
                                 if (showConsole) {
-                                    cout << "\tinside: " << inside / (float) fillCount;
+                                    cout << "\tinside: " << inside / float(fillCount);
                                 }
                                 if (inside <= exitCondition) {
                                     cout << " Done!\n";
@@ -2050,7 +2052,7 @@ private:
                                 break;
                             case condition:
                                 if (showConsole) {
-                                    cout << "\tinside: " << stat.value / (float) fillCount;
+                                    cout << "\tinside: " << stat.value / float(fillCount);
                                 }
                                 if (stat.value / (float) fillCount <= exitCondition) {
                                     cout << " Done!\n";
@@ -2106,7 +2108,7 @@ private:
         }
     }
 
-    uint CalcStatisticAdsorbed(Margolus * CAM) {
+    static uint CalcStatisticAdsorbed(Margolus * CAM) {
         uint result = 0;
         for (uint ix = 0; ix < CAM->GetSizeX(); ++ix) {
             for (uint iy = 0; iy < CAM->GetSizeY(); ++iy) {
@@ -2132,7 +2134,7 @@ private:
         return result;
     }
 
-    void SaveToFile(uint i, int result, bool add, string saveDirectory, string file) {
+    static void SaveToFile(uint i, int result, bool add, string saveDirectory, string file) {
         ofstream out;
         if (add) {
             out.open(saveDirectory + "//" + file, ios_base::app);
@@ -2143,7 +2145,7 @@ private:
         out.close();
     }
 
-    void SaveToFile(cuint & i, const vector<uint> & result, const bool & add,
+    static void SaveToFile(cuint & i, const vector<uint> & result, const bool & add,
             string saveDirectory, string file) {
         ofstream out;
         if (add) {
@@ -2160,7 +2162,7 @@ private:
         out.close();
     }
 
-    void SaveFieldToFile(Margolus * CAM, string saveDirectory, cuint& i) {
+    void SaveFieldToFile(Margolus * CAM, string saveDirectory, cuint& i) const {
         string fldPath = "field_";
         char cpath[33];
         itoa(i, cpath);
@@ -2175,7 +2177,7 @@ private:
         }
     }
     
-    void Save2dFldToFile(int ** fld, int x, int y) {
+    static void Save2dFldToFile(int ** fld, int x, int y) {
         uchar *img = NULL;
         if (img) {
             free(img);
@@ -2213,11 +2215,11 @@ private:
                         g = 255 - (c % 64 * 255) / 64;
                         break;
                 }
-                img[(ix + iy * x) * F + 0] = (uchar)(r);
-                img[(ix + iy * x) * F + 1] = (uchar)(g);
-                img[(ix + iy * x) * F + 2] = (uchar)(b);
+                img[(ix + iy * x) * F + 0] = uchar(r);
+                img[(ix + iy * x) * F + 1] = uchar(g);
+                img[(ix + iy * x) * F + 2] = uchar(b);
                 // PNG!
-                img[(ix + iy * x) * F + 3] = (uchar)(255);
+                img[(ix + iy * x) * F + 3] = uchar(255);
             }
         }
 
@@ -2225,7 +2227,7 @@ private:
         SavePNG(path.c_str(), img, x, y);
     }
     
-    void SavePNG(cchar* path, uchar* imageData, int width, int height) {
+    static void SavePNG(cchar* path, uchar* imageData, int width, int height) {
         FILE *f = fopen(path, "wb");
         if (!f) {
             printf("Can't open file! %s", path);
@@ -2282,7 +2284,7 @@ private:
         fclose(f);
     }
     
-    void Save2dImageToFile(Margolus * CAM, string saveDirectory, cuint& i, cuint& iz = 0) {
+    static void Save2dImageToFile(Margolus * CAM, string saveDirectory, cuint& i, cuint& iz = 0) {
         uchar *img = NULL;
         if (img) {
             free(img);
@@ -2296,11 +2298,11 @@ private:
                 Cell cell = CAM->GetCell(ix, iy, iz);
                 c = cell.GetSubCount();
                 if (c == 0) {
-                    img[(ix + iy * CAM->GetSizeX()) * F + 0] = (uchar)(255);
-                    img[(ix + iy * CAM->GetSizeX()) * F + 1] = (uchar)(255);
-                    img[(ix + iy * CAM->GetSizeX()) * F + 2] = (uchar)(255);
+                    img[(ix + iy * CAM->GetSizeX()) * F + 0] = uchar(255);
+                    img[(ix + iy * CAM->GetSizeX()) * F + 1] = uchar(255);
+                    img[(ix + iy * CAM->GetSizeX()) * F + 2] = uchar(255);
                     // PNG!
-                    img[(ix + iy * CAM->GetSizeX()) * F + 3] = (uchar)(255);
+                    img[(ix + iy * CAM->GetSizeX()) * F + 3] = uchar(255);
                     continue;
                 }
                 for (pSub & sub : cell.GetSubs()) {
@@ -2313,11 +2315,11 @@ private:
                 g /= c;
                 b /= c;
                 
-                img[(ix + iy * CAM->GetSizeX()) * F + 0] = (uchar)(r);
-                img[(ix + iy * CAM->GetSizeX()) * F + 1] = (uchar)(g);
-                img[(ix + iy * CAM->GetSizeX()) * F + 2] = (uchar)(b);
+                img[(ix + iy * CAM->GetSizeX()) * F + 0] = uchar(r);
+                img[(ix + iy * CAM->GetSizeX()) * F + 1] = uchar(g);
+                img[(ix + iy * CAM->GetSizeX()) * F + 2] = uchar(b);
                 // PNG!
-                img[(ix + iy * CAM->GetSizeX()) * F + 3] = (uchar)(255);
+                img[(ix + iy * CAM->GetSizeX()) * F + 3] = uchar(255);
             }
         }
 
@@ -2375,11 +2377,8 @@ private:
 };
 
 int main(int argc, char* argv[]) {
-    // NORMAL || TEST
-#define NORMAL
     srand(time(NULL));
     //srand((unsigned) time(0));
-#ifdef NORMAL
     Main* pApp = new Main();
     // check print
     for (uint i = 1; i < argc; ++i) {
@@ -2471,6 +2470,5 @@ int main(int argc, char* argv[]) {
     pApp->Run();
     //unsigned elapsed = clock() - t0;
     cout << "Прошло: " << double(clock() - t0) / CLOCKS_PER_SEC << " сек.\n";
-#endif
     return 0;
 }

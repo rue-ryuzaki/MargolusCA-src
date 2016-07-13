@@ -18,9 +18,9 @@ Margolus::Margolus(cuint& sizeX, cuint& sizeY, cuint sizeZ)
 
 Margolus::~Margolus() {
     delete steamEnergy_;
-    steamEnergy_ = 0;
+    steamEnergy_ = nullptr;
     delete T;
-    T = 0;
+    T = nullptr;
     subs.clear();
     energy.clear();
     energyCell.clear();
@@ -135,7 +135,7 @@ void Margolus::Calculation(cuint& dx, cuint& dy, cuint& dz) {
                 }
                 //normalization
                 double sumProbability = 0.0;
-                double rnd = (double)(rand()) / RAND_MAX;
+                double rnd = double(rand()) / RAND_MAX;
                 for (uint i = 0; i < blockSize3D; ++i) {
                     sumProbability += blocks3D[i].energy / Z;
                     if (rnd <= sumProbability) {
@@ -202,7 +202,7 @@ void Margolus::Calculation(cuint& dx, cuint& dy) {
             }
             //normalization
             double sumProbability = 0.0;
-            double rnd = (double)(rand()) / RAND_MAX;
+            double rnd = double(rand()) / RAND_MAX;
             for (uint i = 0; i < blockSize; ++i) {
                 sumProbability += blocks[i].energy / Z;
                 if (rnd <= sumProbability) {
@@ -215,7 +215,7 @@ void Margolus::Calculation(cuint& dx, cuint& dy) {
 }
 
 void Margolus::SetTempPtr(double* pointer) {
-    if (T == 0 || T == nullptr) {
+    if (T == nullptr) {
         T = pointer;
     }
     //return T;
@@ -226,7 +226,7 @@ void Margolus::SetTemperature(double Temp) {
 }
 
 void Margolus::SetSteamPtr(double* pointer) {
-    if (steamEnergy_ == 0 || steamEnergy_ == nullptr) {
+    if (steamEnergy_ == nullptr) {
         steamEnergy_ = pointer;
     }
     //return steamEnergy_;

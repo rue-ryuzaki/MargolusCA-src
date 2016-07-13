@@ -6,7 +6,7 @@
 class MargolusQuasi : public Margolus {
 public:
     MargolusQuasi();
-    MargolusQuasi(Sizes sizes);
+    explicit MargolusQuasi(Sizes sizes);
     MargolusQuasi(cuint& sizeX, cuint& sizeY, cuint sizeZ = 1);
     ~MargolusQuasi();
     

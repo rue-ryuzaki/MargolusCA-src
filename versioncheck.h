@@ -8,18 +8,18 @@
 using namespace std;
 
 struct ver {
-    ver() { }
-    ver(string v) : value(v) { }
+    ver() : value(), sub() { }
+    explicit ver(string v) : value(v), sub() { }
     
     string value;
     int sub[4];
     
     bool update() {
-        for (int i = 0; i < 4; ++i) {
+        for (size_t i = 0; i < 4; ++i) {
             sub[i] = 0;
         }
-        int dot = 0;
-        for (int i = 0; i < value.size(); ++i) {
+        size_t dot = 0;
+        for (size_t i = 0; i < value.size(); ++i) {
             if (value[i] == '.') {
                 ++dot;
             }
@@ -31,12 +31,12 @@ struct ver {
         }
         smatch match;
         string regval = "([0-9]+)";
-        for (int i = 0; i < dot; ++i) {
+        for (size_t i = 0; i < dot; ++i) {
             regval += ".([0-9]+)";
         }
         regex reg(regval);
         if (regex_search(value, match, reg)) {
-            for (int i = 0; i <= dot; ++i) {
+            for (size_t i = 0; i <= dot; ++i) {
                 sub[i] = atoi(match[i + 1].str().c_str());
             }
         } else {
@@ -60,7 +60,7 @@ void checkConfigVersion(string cfg, int &x) {
         return;
     }
     
-    for (int i = 0; i < 3; ++i) {
+    for (size_t i = 0; i < 3; ++i) {
         if (thisVer.sub[i] < cfgVer.sub[i]) {
             x = 0;
             return;

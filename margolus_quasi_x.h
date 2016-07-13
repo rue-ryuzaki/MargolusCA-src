@@ -5,7 +5,7 @@
 #include "margolus_base.h"
 
 struct CellX {
-    CellX(Cell cell) : central(cell) { }
+    explicit CellX(Cell cell) : central(cell) { }
     
     Cell central;
     vector<Cell> neighbours;
@@ -14,7 +14,7 @@ struct CellX {
 class MargolusQuasiX : public Margolus {
 public:
     MargolusQuasiX();
-    MargolusQuasiX(Sizes sizes);
+    explicit MargolusQuasiX(Sizes sizes);
     MargolusQuasiX(cuint& sizeX, cuint& sizeY, cuint sizeZ = 1);
     ~MargolusQuasiX();
     

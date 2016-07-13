@@ -46,7 +46,7 @@ struct XColor {
 
 class Substance {
 public:
-    Substance(const string& name = "none", const XColor color = XColor(),
+    Substance(const string& name = "none", const XColor& color = XColor(),
             const vector<locate>& locations = vector<locate>())
             : name(name), color(color), location(locations) { 
                 //for (uint i = 0; i < locations.size(); ++i) {
@@ -66,16 +66,16 @@ public:
     
 protected:
     string name;
-    uint fillCount = 0;
-    vector<locate> location;
     XColor color;
+    vector<locate> location;
+    uint fillCount = 0;
 };
 
 typedef Substance* pSub;
 
 class Active : public Substance {
 public:
-    Active(const string& name = "acte", const XColor color = XColor(255),
+    Active(const string& name = "acte", const XColor& color = XColor(255),
             const vector<locate>& locations = vector<locate>()) :
             Substance(name, color, locations) { }
     ~Active() { }
@@ -85,7 +85,7 @@ public:
 
 class Modifier : public Substance {
 public:
-    Modifier(const string& name = "mode", const XColor color = XColor(0, 255),
+    Modifier(const string& name = "mode", const XColor& color = XColor(0, 255),
             const vector<locate>& locations = vector<locate>()) :
             Substance(name, color, locations) { }
     ~Modifier() { }
@@ -95,7 +95,7 @@ public:
 
 class Solid : public Substance {
 public:
-    Solid(const string& name = "sole", const XColor color = XColor(0, 0, 255),
+    Solid(const string& name = "sole", const XColor& color = XColor(0, 0, 255),
             const vector<locate>& locations = vector<locate>()) :
             Substance(name, color, locations) { }
     ~Solid() { }

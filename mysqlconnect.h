@@ -41,9 +41,9 @@ public:
     bool Restruct();
 
     void SetRows(uint);
-    uint GetRows();
+    uint GetRows() const;
     void SetColumns(uint);
-    uint GetColumns();
+    uint GetColumns() const;
 
     void SetData(uint row, uint column, string value);
     void SetHead(uint column, string value);
@@ -74,28 +74,28 @@ class SQLResult {
 public:
     SQLResult(SQLStatus status, string message, MySQLData data);
     
-    MySQLData GetData() const;
-    SQLStatus GetStatus() const;
-    string GetMessage() const;
+    MySQLData GetData()    const;
+    SQLStatus GetStatus()  const;
+    string    GetMessage() const;
     
 private:
     SQLStatus status;
-    string message;
+    string    message;
     MySQLData data;
 };
 
 class MySQL {
 public:
-    MySQL(connectDetails);
+    explicit MySQL(connectDetails);
     MySQL(string server, string user, string password, string database, string table = "");
     ~MySQL();
     
-    void PrintQuery(string);
+    void      PrintQuery(string);
     SQLResult Execute(string);
     SQLResult GetData(string);
     SQLResult ConnectTest();
-    string GetTable() const;
-    void SetTable(string);
+    string    GetTable() const;
+    void      SetTable(string);
     
 private:
     connectDetails mysqlD;

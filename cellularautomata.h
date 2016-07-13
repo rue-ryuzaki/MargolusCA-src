@@ -15,7 +15,7 @@ struct Sizes {
 class CellularAutomata {
 public:
     CellularAutomata();
-    CellularAutomata(Sizes sizes);
+    explicit CellularAutomata(Sizes sizes);
     CellularAutomata(cuint& sizeX, cuint& sizeY, cuint sizeZ = 1);
     
     ~CellularAutomata();
@@ -47,7 +47,7 @@ public:
     
     bool AddToCell(pSub sub, int x, int y, int z = 0);
     void AddSub(pSub newSub);
-    void AddSub(const SUBTYPE type, const string& name, const XColor color = XColor(),
+    void AddSub(const SUBTYPE type, const string& name, const XColor& color = XColor(),
         const vector<locate>& locations = vector<locate>());
     pSub GetSub(cuint& i) const;
     pSub GetSub(const string& name);
@@ -68,8 +68,8 @@ public:
     void SaveFieldBin(cchar* path);
     void SaveFieldText(cchar* path);
     
-    void SaveToImage(cchar* path, uchar* imageData);
-    void SaveToImagePNG(cchar* path, uchar* imageData);
+    void SaveToImage(cchar* path, uchar* imageData) const;
+    void SaveToImagePNG(cchar* path, uchar* imageData) const;
     
     uint Layer();
     uint Adsorbed() const;

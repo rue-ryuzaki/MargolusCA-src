@@ -11,7 +11,7 @@ using namespace std;
 class Cell {
 public:
     Cell();
-    Cell(pSub sub);
+    explicit Cell(pSub sub);
     ~Cell();
     
     bool AddSub(pSub newSub);
